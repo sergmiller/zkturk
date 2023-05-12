@@ -12,7 +12,7 @@ contract ZkTurkContract is Ownable {
     uint immutable problemFee;
     uint immutable problemStake;
 
-    // To store problem that have tasks and optional answers.
+    // To store problem that have tasks and set of answers.
     struct Problem {
         address owner;
         string title;
@@ -28,8 +28,8 @@ contract ZkTurkContract is Ownable {
     // To store number of workers per problem.
     uint[] problemWorkersCounts;
 
-    mapping(address => uint) workerToProblem;
-    mapping(address => uint) workerToStakeId;  // stake id is similar to the problem id.
+    mapping(address => uint) workerToProblem; // TODO: to problems (MVP - 1 worker could solve simultaniously only 1 problem)
+    mapping(address => uint) workerToStakeId;  // stake id is similar to the problem id.  (MVP - 1 worker could solve simultaniously only 1 problem)
 
     struct TaskAnswer {
         uint problemId;
@@ -59,7 +59,7 @@ contract ZkTurkContract is Ownable {
         uint taskPriceWei,
         uint answersMax
     ) payable external {
-        require(msg.value == problemFee + (answersMax * workersMax * taskPriceWei), "Not Enough Eth.");
+        require(msg.value >= problemFee + (answersMax * workersMax * taskPriceWei), "Not Enough Eth.");
         // TODO: add require non empty title etc.
         problems.push(
             Problem(
@@ -77,12 +77,12 @@ contract ZkTurkContract is Ownable {
     }
 
     // Stake is returnable if even 1 answer sumbitted.
-    function joinToProblem(uint problemId, string memory worldIdHash) payable external {
+    function joinProblem(uint problemId, string memory worldIdHash) payable external {
         require(msg.value == problemStake, "Not Enough Eth.");
         require(problemId < problems.length, "Problem does not exist.");
         Problem memory problem = problems[problemId];
         require(problemWorkersCounts[problemId] < problem.workersMax);
-        require(workerToProblem[msg.sender] == 0, "Already in the game.");
+        require(workerToProblem[msg.sender] == 0, "Already in the problem.");
 
         // TODO: work with worldIdHash and proof and store?
         workerToProblem[msg.sender] = problemId;
