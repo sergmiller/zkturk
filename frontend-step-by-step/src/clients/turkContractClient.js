@@ -1,8 +1,21 @@
-// Iteration with web3 Poker Room Contract.
 import {getWeb3Accounts} from "../utils/blockchain";
 
-const CONTRACT_ABI = []
+import { IDKitWidget, useIDKit, IDKit } from "@worldcoin/idkit";
 
+//const { open, setOpen } = useIDKit({
+//	signal: "my_signal",
+//	handleVerify: result => console.log(result),
+//	actionId: "get_this_from_the_dev_portal",
+//	walletConnectProjectId: "get_this_from_walletconnect_portal",
+//});
+
+window.open = open
+window.IDKitWidget = IDKitWidget
+window.IDKit = IDKit
+
+console.log("IDKit", IDKit)
+
+const CONTRACT_ABI = []
 
 export class TurkContractClient {
     constructor(web3, address) {
