@@ -6,29 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/web3@1.3.4/dist/web3.min.js"></script>
-    <script type="module" src="clients/turkContractClient.js"></script>
-    <script src="utils/idkit.js"></script>
-<!--    <script type="module" src="clients/tests.js"></script>-->
     <script>
-      const IDKit = getIdKit()
-
-      console.log("IDKIT_CONSOLE", IDKit)
-
-      IDKit.useIDKit('app', {
-          enable_telemetry: true,
-          app_id: 'app_staging_a50d7cafca2dd77781ac6df8b9929179', // obtain this from developer.worldcoin.org
-          action: 'test_signal',
-          onSuccess: result => console.log(result),
-      })
-
-      document.getElementById('trigger-button').addEventListener('click', () => {
-          IDKit.open()
-      })
     </script>
   </head>
-  <body onload="render()">
-    <div id="app">
-      <div class="container">Loading...</div>
-    </div>
+  <body>
+  <div id="root">
+			<h1 id="heading">idkit-js</h1>
+			<button id="open-idkit">Open</button>
+  </div>
+    <script src="./index.js"></script>
+<!--    <div>-->
+<!--          <button id="trigger-button">Open</button>-->
+<!--    </div>-->
+    <script>
+          idkit.type({
+              signal: 'test_signal',
+              app_id: 'wid_staging_a8d860d5b3450f05ae09e8f4aa935b90',
+              action: 'test-action',
+              action_description: 'Test action description',
+              enableTelemetry: true,
+              credential_types: ['phone', 'orb'],
+              handleVerify: response => {
+                  // verify the IDKIt proof, throw an error to show the error screen
+              },
+              onSuccess: response => {
+                  console.log(response)
+              },
+          })
+
+          document.getElementById('open-idkit').addEventListener('click', async () => {
+              await idkit.open()
+          })
+    </script>
   </body>
 </html>
