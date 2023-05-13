@@ -40,8 +40,8 @@ contract ZkTurkContract is Ownable {
         string cipheredAnswer;
         string decipherKey;
     }
-    TaskAnswer[] taskAnswers;
-    mapping(uint problemId => uint[]) public problemToAnswers;
+    TaskAnswer[] public taskAnswers;
+    mapping(uint problemId => uint[]) problemToAnswers;
     mapping(address => mapping(uint => uint[])) workerToProblemAnswers;
     // workerToProblemAnswers[workerAddress][problemId] -> answers ids.
 
@@ -89,6 +89,7 @@ contract ZkTurkContract is Ownable {
         // TODO: work with worldIdHash and proof and store?
         workerToProblem[msg.sender] = problemId;
         workerToStakeId[msg.sender] = problemId;
+        problemWorkersCounts[problemId] += 1;
     }
 
     // function _hash(uint a, uint b) internal pure returns(bytes32) {
@@ -143,28 +144,29 @@ contract ZkTurkContract is Ownable {
         require(problemId < problems.length, "Problem does not exist.");
         string[] memory problemAsnwers = problems[problemId].asnwers;
 
-        bool doesListContainElement = false;
+        bool answerAllowed = false;
         for (uint i=0; i < problemAsnwers.length; i++) {
             if (compareStrings(answer, problemAsnwers[i])) {
-                doesListContainElement = true;
+                answerAllowed = true;
                 break;
             }
         }
-        return doesListContainElement;
+        return answerAllowed;
 
     }
 
+    /*
+        It checks that with deciphering it makes allowed answer and pay and return stak.
+    */
     function withdrawAndDecipher(address worker, uint problemId, string memory decipherKey) external {
         // TODO: checks.
 
-        // TODO: store decipher key
-        // TODO: check that with deciphering it makes answer and pay.
         uint[] memory workerAnswers = workerToProblemAnswers[worker][problemId];
 
         uint decipheredTaskAnswersCounter = 0;
         for (uint i=0; i < workerAnswers.length; i++) {
             TaskAnswer storage taskAnswer = taskAnswers[workerAnswers[i]];
-            if (compareStrings(taskAnswer.decipherKey, NO_KEY_FLAG)) {
+            if (!compareStrings(taskAnswer.decipherKey, NO_KEY_FLAG)) {
                 string memory decipheredAnswer = getDecipheredAnswer(taskAnswer.cipheredAnswer, decipherKey);
                 require(isAnswerAllowed(decipheredAnswer, problemId), "Answer is not allowed.");
 
@@ -172,6 +174,9 @@ contract ZkTurkContract is Ownable {
                 decipheredTaskAnswersCounter += 1;
             }
         }
+
+        // Allow worker to start solve new problems.
+        delete workerToProblem[worker];
 
         if (decipheredTaskAnswersCounter != 0) {
             uint stakeToReturn = workerToStakeId[msg.sender];
