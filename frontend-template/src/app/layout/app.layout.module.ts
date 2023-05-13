@@ -24,6 +24,21 @@ import { MyMenuComponent } from "./customization/appmenu/my.menu.component";
 import { ButtonModule } from "primeng/button";
 import { SplitButtonModule } from "primeng/splitbutton";
 import { ToggleButtonModule } from "primeng/togglebutton";
+import { CommonModule } from "@angular/common";
+import { FormLayoutDemoRoutingModule } from "../demo/components/uikit/formlayout/formlayoutdemo-routing.module";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { CalendarModule } from "primeng/calendar";
+import { ChipsModule } from "primeng/chips";
+import { DropdownModule } from "primeng/dropdown";
+import { InputMaskModule } from "primeng/inputmask";
+import { InputNumberModule } from "primeng/inputnumber";
+import { CascadeSelectModule } from "primeng/cascadeselect";
+import { MultiSelectModule } from "primeng/multiselect";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { NewTaskLayoutComponent } from "../hackApp/layouts/new-task-layout/new-task-layout.component";
+import { AllMyTasksLayoutComponent } from "../hackApp/layouts/all-my-tasks-layout/all-my-tasks-layout.component";
+import { AvailableTasksLayoutComponent } from "../hackApp/layouts/available-tasks-layout/available-tasks-layout.component";
+import { FileUploadModule } from "primeng/fileupload";
 
 @NgModule({
   declarations: [
@@ -37,6 +52,9 @@ import { ToggleButtonModule } from "primeng/togglebutton";
     MyAppLayoutComponent,
     MySidebarComponent,
     MyMenuComponent,
+    NewTaskLayoutComponent,
+    AllMyTasksLayoutComponent,
+    AvailableTasksLayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +75,19 @@ import { ToggleButtonModule } from "primeng/togglebutton";
     RippleModule,
     SplitButtonModule,
     ToggleButtonModule,
+
+    CommonModule,
+    FormLayoutDemoRoutingModule,
+    AutoCompleteModule,
+    CalendarModule,
+    ChipsModule,
+    DropdownModule,
+    InputMaskModule,
+    InputNumberModule,
+    CascadeSelectModule,
+    MultiSelectModule,
+    InputTextareaModule,
+		FileUploadModule
   ],
   exports: [
     AppLayoutComponent,

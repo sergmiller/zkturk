@@ -21,7 +21,7 @@ import { AllMyTasksLayoutComponent } from './hackApp/layouts/all-my-tasks-layout
 import { AvailableTasksLayoutComponent } from './hackApp/layouts/available-tasks-layout/available-tasks-layout.component';
 
 @NgModule({
-  declarations: [AppComponent, NotfoundComponent, MainLayoutComponent, IntegrationLayoutComponent, NewTaskLayoutComponent, AllMyTasksLayoutComponent, AvailableTasksLayoutComponent],
+  declarations: [AppComponent, NotfoundComponent, MainLayoutComponent, IntegrationLayoutComponent],
   imports: [AppRoutingModule, AppLayoutModule],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

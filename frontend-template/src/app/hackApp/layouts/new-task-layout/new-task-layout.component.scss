@@ -1,0 +1,28 @@
+.submit-button {
+  display: flex;
+  margin-left: auto;
+}
+
+.cost {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+:host ::ng-deep {
+
+  .p-fluid .p-fileupload .p-button {
+    min-width: 3rem;
+  }
+
+  .p-fluid .p-fileupload .p-fileupload-buttonbar .p-button {
+    width: auto;
+  }
+
+  .field-margin-0 {
+    margin-bottom: 0;
+  }
+
+
+}

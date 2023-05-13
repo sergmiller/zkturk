@@ -1,1 +1,64 @@
-<p>new-task-layout works!</p>
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <h4>Create task</h4>
+      <div class="p-fluid p-formgrid grid">
+        <div class="field field-margin-0 col-12 md:col-4">
+          <label htmlFor="Name">Name</label>
+          <input pInputText id="Name" type="text" />
+        </div>
+        <div class="field field-margin-0 col-12 md:col-4">
+          <label htmlFor="PriceForOne">PriceForOne</label>
+          <input pInputText id="PriceForOne" type="text" />
+        </div>
+        <div class="field field-margin-0 col-12 md:col-4">
+          <label htmlFor="Overshoto">Overshoto</label>
+          <input pInputText id="Overshoto" type="text" />
+        </div>
+        <div class="field field-margin-0 col-12">
+          <label htmlFor="address">Description</label>
+          <textarea rows="5" cols="30" placeholder="Your Message" pInputTextarea></textarea>
+        </div>
+
+        <div class="field field-margin-0 col-12">
+          <label>Files</label>
+          <p-fileUpload
+            mode="advanced"
+            name="upload-files"
+            (onSelect)="onSelect($event)"
+            (onClear)="onClear()"
+            (onRemove)="onRemove($event)"
+            [files]="uploadedFiles"
+            [showUploadButton]="false"
+            [multiple]="true"
+            [customUpload]="true"
+            accept="image/*"
+            [maxFileSize]="1000000"
+          >
+            <!-- <ng-template pTemplate="content">
+              <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+              </ul>
+            </ng-template> -->
+          </p-fileUpload>
+        </div>
+
+        <div class="field field-margin-0 col-12">
+          <label htmlFor="address">Variants (separated by commas)</label>
+          <textarea rows="2" cols="30" placeholder="one, two, three" pInputTextarea></textarea>
+        </div>
+
+        <!-- <div class="field col-12 md:col-6">
+          <label htmlFor="city">City</label>
+          <input pInputText id="city" type="text" />
+        </div> -->
+
+        <div class="field col-12 md:col-12 cost">
+          <div class="text-900 font-medium text-xl">Total cost:</div>
+          <div class="text-900 font-medium text-xl">$2.100</div>
+        </div>
+      </div>
+      <button class="submit-button" pButton label="Pay and create task"></button>
+    </div>
+  </div>
+</div>
