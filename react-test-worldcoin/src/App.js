@@ -21,7 +21,7 @@ function App() {
 //	];
 
 	const action = "my_action"
-	const app_id = "app_staging_a50d7cafca2dd77781ac6df8b9929179"
+	const app_id = "app_3e9eeaff7bed8b8b6c50031ae88bda50"
 
 	return (
 		<div
