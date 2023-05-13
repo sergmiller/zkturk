@@ -95,8 +95,8 @@ function App() {
 //	];
 
 //	const action = app_id
-//	const app_id = "app_staging_a50d7cafca2dd77781ac6df8b9929179"
-	const app_id = "app_3e9eeaff7bed8b8b6c50031ae88bda50"
+	const app_id = "app_staging_a50d7cafca2dd77781ac6df8b9929179"
+//	const app_id = "app_3e9eeaff7bed8b8b6c50031ae88bda50"
 //	const signal = "0x439569F5142e30c131E6704ff847B507F39BC5bC"
 	const signal = solidityEncode(['address'], [signalAddress])
 	const action = solidityEncode(['string'], ["app_id"])
@@ -113,7 +113,7 @@ function App() {
 			}}
 		>
 			<IDKitWidget
-//				action={action}
+				action={action}
 				signal={signal}
 				onSuccess={onSuccess}
 				handleVerify={handleProof}
