@@ -5,6 +5,8 @@ pragma solidity ^0.8.1;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
+import "hardhat/console.sol";
+
 
 contract ZkTurkContract is Ownable {
     //  TODO: reorder vars to save space.
@@ -39,7 +41,7 @@ contract ZkTurkContract is Ownable {
         string decipherKey;
     }
     TaskAnswer[] taskAnswers;
-    mapping(uint problemId => uint[]) problemToAnswers;
+    mapping(uint problemId => uint[]) public problemToAnswers;
     mapping(address => mapping(uint => uint[])) workerToProblemAnswers;
     // workerToProblemAnswers[workerAddress][problemId] -> answers ids.
 
@@ -95,23 +97,23 @@ contract ZkTurkContract is Ownable {
     //     return keccak256(abi.encodePacked(""));
     // }
 
-    function isTaskAnswerSubmitted(uint problemId, uint taskId) view private returns(bool){
+    function isTaskNotAnsweredByWorker(uint problemId, uint taskId) view private returns(bool){
         //  TODO: use hashing.
         uint[] memory answers = workerToProblemAnswers[msg.sender][problemId];
-        bool doesListContainElement = false;
+        bool notAnswered = true;
         for (uint i=0; i < answers.length; i++) {
             if (taskId == answers[i]) {
-                doesListContainElement = true;
+                notAnswered = false;
                 break;
             }
         }
-        return doesListContainElement;
+        return notAnswered;
     }
 
     // Solve the task you choosed, then
     function solveTask(uint problemId, uint taskId, string memory cipheredAnswer) external {
         require(workerToProblem[msg.sender] == problemId, "User is not joined to the problem.");
-        require(isTaskAnswerSubmitted(problemId, taskId), "Solve the task that already solved by the same user is prohibetted.");
+        require(isTaskNotAnsweredByWorker(problemId, taskId), "Solve the task that already solved by the same user is prohibetted.");
         require(problemToAnswers[problemId].length <= problems[problemId].answersMax, "Max answers submitted.");
 
         taskAnswers.push(
@@ -159,7 +161,6 @@ contract ZkTurkContract is Ownable {
         // TODO: check that with deciphering it makes answer and pay.
         uint[] memory workerAnswers = workerToProblemAnswers[worker][problemId];
 
-
         uint decipheredTaskAnswersCounter = 0;
         for (uint i=0; i < workerAnswers.length; i++) {
             TaskAnswer storage taskAnswer = taskAnswers[workerAnswers[i]];
@@ -172,10 +173,11 @@ contract ZkTurkContract is Ownable {
             }
         }
 
-        // TODO: pay stake.
-        uint stakeToReturn = workerToStakeId[msg.sender];
-        delete workerToStakeId[msg.sender];
-        Problem memory problem = problems[problemId];
-        payable(msg.sender).transfer(stakeToReturn + decipheredTaskAnswersCounter * problem.taskPriceWei);
+        if (decipheredTaskAnswersCounter != 0) {
+            uint stakeToReturn = workerToStakeId[msg.sender];
+            delete workerToStakeId[msg.sender];
+            Problem memory problem = problems[problemId];
+            payable(msg.sender).transfer(stakeToReturn + decipheredTaskAnswersCounter * problem.taskPriceWei);
+        }
     }
 }

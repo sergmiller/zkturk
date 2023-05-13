@@ -91,5 +91,12 @@ describe("ZkTurkContract", function () {
             await _joinDefaultProblem()
             await contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer")
         })
+
+        it("it do not allow to solve task twice", async function () {
+            await addDefaultProblem()
+            await _joinDefaultProblem()
+            await contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer")
+            await shouldThrow(contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer"))
+        })
     })
 });
