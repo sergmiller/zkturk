@@ -78,6 +78,10 @@ contract ZkTurkContract is Ownable, Crypto {
     }
     // TODO: change fee method.
 
+    function getProblems() public view returns (Problem[] memory) {
+        return problems;
+    }
+
     function addProblem(
         string memory title,
         string memory description,
