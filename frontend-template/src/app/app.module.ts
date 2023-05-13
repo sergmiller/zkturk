@@ -17,8 +17,8 @@ import { MetamaskProviderService } from "./hackApp/services/metamask-provider.se
 import { configure } from "mobx";
 import { MetamaskStateService } from "./hackApp/services/metamask-state.service";
 import { NewTaskLayoutComponent } from "./hackApp/layouts/new-task-layout/new-task-layout.component";
-import { AllMyTasksLayoutComponent } from './hackApp/all-my-tasks-layout/all-my-tasks-layout.component';
-import { AvailableTasksLayoutComponent } from './hackApp/available-tasks-layout/available-tasks-layout.component';
+import { AllMyTasksLayoutComponent } from './hackApp/layouts/all-my-tasks-layout/all-my-tasks-layout.component';
+import { AvailableTasksLayoutComponent } from './hackApp/layouts/available-tasks-layout/available-tasks-layout.component';
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent, MainLayoutComponent, IntegrationLayoutComponent, NewTaskLayoutComponent, AllMyTasksLayoutComponent, AvailableTasksLayoutComponent],
