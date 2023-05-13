@@ -1,7 +1,8 @@
+// Iteration with web3 Poker Room Contract.
 import {getWeb3Accounts} from "../utils/blockchain";
 
-
 const CONTRACT_ABI = []
+
 
 export class TurkContractClient {
     constructor(web3, address) {
@@ -91,4 +92,3 @@ export class TurkContractClient {
         return transaction.events.payableMethod.returnValues.namedValue;
     }
 }
-

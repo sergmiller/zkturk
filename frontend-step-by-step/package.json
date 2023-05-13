@@ -10,8 +10,6 @@
 		"last 1 Chrome versions"
 	],
 	"dependencies": {
-		"react-hook-form": "7.43.9",
-		"@worldcoin/idkit": "0.4.9",
 		"axios": "0.21.1",
 		"filereader": "^0.10.3",
 		"fs": "^0.0.1-security",
