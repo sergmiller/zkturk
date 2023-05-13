@@ -6,6 +6,7 @@ import { MainLayoutComponent } from "./hackApp/layouts/main-layout/main-layout.c
 import { NewTaskLayoutComponent } from "./hackApp/layouts/new-task-layout/new-task-layout.component";
 import { AllMyTasksLayoutComponent } from "./hackApp/layouts/all-my-tasks-layout/all-my-tasks-layout.component";
 import { AvailableTasksLayoutComponent } from "./hackApp/layouts/available-tasks-layout/available-tasks-layout.component";
+import { MyLandingComponent } from "./hackApp/layouts/my-landing/my-landing.component";
 
 @NgModule({
   imports: [
@@ -15,12 +16,15 @@ import { AvailableTasksLayoutComponent } from "./hackApp/layouts/available-tasks
           path: "",
           component: MainLayoutComponent,
           children: [
+            { path: "", component: MyLandingComponent },
             { path: "available-tasks", component: AvailableTasksLayoutComponent },
             { path: "new-task", component: NewTaskLayoutComponent },
             { path: "all-my-tasks", component: AllMyTasksLayoutComponent },
 
+
+
             {
-              path: "",
+              path: "dashboard",
               loadChildren: () => import("./demo/components/dashboard/dashboard.module").then((m) => m.DashboardModule),
             },
             {

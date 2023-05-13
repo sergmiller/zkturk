@@ -39,6 +39,8 @@ import { NewTaskLayoutComponent } from "../hackApp/layouts/new-task-layout/new-t
 import { AllMyTasksLayoutComponent } from "../hackApp/layouts/all-my-tasks-layout/all-my-tasks-layout.component";
 import { AvailableTasksLayoutComponent } from "../hackApp/layouts/available-tasks-layout/available-tasks-layout.component";
 import { FileUploadModule } from "primeng/fileupload";
+import { MyLandingComponent } from "../hackApp/layouts/my-landing/my-landing.component";
+import { TaskCardComponent } from "../hackApp/components/task-card/task-card.component";
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { FileUploadModule } from "primeng/fileupload";
     NewTaskLayoutComponent,
     AllMyTasksLayoutComponent,
     AvailableTasksLayoutComponent,
+    MyLandingComponent,
+    TaskCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,7 +91,7 @@ import { FileUploadModule } from "primeng/fileupload";
     CascadeSelectModule,
     MultiSelectModule,
     InputTextareaModule,
-		FileUploadModule
+    FileUploadModule,
   ],
   exports: [
     AppLayoutComponent,
@@ -101,6 +105,8 @@ import { FileUploadModule } from "primeng/fileupload";
     MyAppLayoutComponent,
     MySidebarComponent,
     MyMenuComponent,
+    MyLandingComponent,
+    TaskCardComponent,
   ],
 })
 export class AppLayoutModule {}
