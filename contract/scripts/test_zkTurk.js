@@ -1,7 +1,11 @@
+// Use remix chain is oke for the tests.
+// TODO: to hardhat.
+import {CryptoContractClient} from "./utils/CryptoContractClient";
+
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-async function shouldThrow(promise, message) {
+async function shouldThrow(promise) {
     try {
         await promise;
     }
@@ -9,7 +13,6 @@ async function shouldThrow(promise, message) {
         return;
     }
     throw Error("The contract did not throw.");
-
 }
 
 
@@ -21,10 +24,13 @@ describe("ZkTurkContract", function () {
     DEF_WORKERS_MAX = 2
     DEF_TASK_PRICE = ethers.utils.parseEther("0.0001")
     DEF_ANS_MAX= 2
+    DEF_SEED = 'fooseed'
 
     let contract = null
     let worldIdContract = null
     let defaultWorker = null
+    let cryptoContractClient = null
+    let defCipheredAnswer = null
 
     beforeEach(async () => {
         const Storage = await ethers.getContractFactory("ZkTurkContract");
@@ -37,6 +43,13 @@ describe("ZkTurkContract", function () {
         defaultWorker = worker1
         // TODO: to work with 0 in mapping of "workerToProblem";
         await addDefaultProblem()
+        const accounts = await web3.eth.getAccounts()
+        signer = accounts[1]
+        // TODO: assert and resolve.
+        // console.log(signer)
+        // console.log(defaultWorker)
+        cryptoContractClient = new CryptoContractClient(web3, signer, contract.address)
+        defCipheredAnswer = await cryptoContractClient.getSignedMessage(DEF_ASNWERS[0], DEF_SEED)
     });
 
     async function addDefaultProblem() {
@@ -115,35 +128,56 @@ describe("ZkTurkContract", function () {
         it("it solves task successfully", async function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
-            await contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer")
+            await contract.connect(defaultWorker).solveTask(1, 0, defCipheredAnswer)
         })
 
         it("it does not allow to solve task twice", async function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
-            await contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer")
-            await shouldThrow(contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer"))
+            await contract.connect(defaultWorker).solveTask(1, 0, defCipheredAnswer)
+            await shouldThrow(contract.connect(defaultWorker).solveTask(1, 0, defCipheredAnswer))
         })
 
         it("it stores ciphered answer", async function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
-            await contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer")
+            await contract.connect(defaultWorker).solveTask(1, 0, defCipheredAnswer)
 
             const answer = await contract.taskAnswers(0)
-            expect(answer.cipheredAnswer).to.equal("cipheredAnswer")
-            expect(answer.decipherKey).to.equal("none")
+            expect(answer.cipheredAnswer).to.equal(defCipheredAnswer)
+            expect(answer.answer).to.equal("none")
         })
     })
 
     describe("#withdrawAndDecipher", () => {
-        //  TODO: negative cases.
-
         it("it withdraws successfully", async function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
-            await contract.connect(defaultWorker).solveTask(1, 0, "cipheredAnswer")
-            await contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, "decipherKey")
+            await contract.connect(defaultWorker).solveTask(1, 0, defCipheredAnswer)
+            console.log('problems', await contract.problems(1))
+            const problemToAnswers = await contract.problemToAnswers(1, 0)
+            console.log('problemToAnswers', problemToAnswers.toString())
+            console.log('taskAnswers', await contract.taskAnswers(0))
+
+            const workerToProblemAnswers = await contract.workerToProblemAnswers(defaultWorker.address, 1, 0)
+            console.log('workerToProblemAnswers', workerToProblemAnswers.toString())
+
+            await contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, DEF_ASNWERS[0], DEF_SEED)
+        })
+
+        it("it does not accept random seed", async function () {
+            await addDefaultProblem()
+            await _joinDefaultProblem()
+            await contract.connect(defaultWorker).solveTask(1, 0, defCipheredAnswer)
+            await shouldThrow(contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, DEF_ASNWERS[0], 'randomSeed'))
+        })
+
+        it("it does not allow non existed answer", async function () {
+            await addDefaultProblem()
+            await _joinDefaultProblem()
+            const answerDoesNotExist = await cryptoContractClient.getSignedMessage('answerDoesNotExist', DEF_SEED)
+            await contract.connect(defaultWorker).solveTask(1, 0, answerDoesNotExist)
+            await shouldThrow(contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, 'answerDoesNotExist', DEF_SEED))
         })
     })
 });

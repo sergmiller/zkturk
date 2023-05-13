@@ -4,6 +4,7 @@ pragma solidity ^0.8.1;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "./Crypto.sol";
 
 import "hardhat/console.sol";
 
@@ -11,7 +12,7 @@ import { ByteHasher } from "./ByteHasher.sol";
 import { IWorldID } from "./IWorldID.sol";
 
 
-contract ZkTurkContract is Ownable {
+contract ZkTurkContract is Ownable, Crypto {
     //  TODO: reorder vars to save space.
     string NO_KEY_FLAG = "none";
     uint immutable problemFee;
@@ -41,12 +42,12 @@ contract ZkTurkContract is Ownable {
         uint problemId;
         uint taskId;
         address worker;
-        string cipheredAnswer;
-        string decipherKey;
+        bytes cipheredAnswer;
+        string answer;
     }
     TaskAnswer[] public taskAnswers;
-    mapping(uint problemId => uint[]) problemToAnswers;
-    mapping(address => mapping(uint => uint[])) workerToProblemAnswers;
+    mapping(uint problemId => uint[]) public problemToAnswers;
+    mapping(address => mapping(uint => uint[])) public workerToProblemAnswers;
     // workerToProblemAnswers[workerAddress][problemId] -> answers ids.
 
     // WorldID stuff
@@ -161,8 +162,8 @@ contract ZkTurkContract is Ownable {
         return notAnswered;
     }
 
-    // Solve the task you choosed, then
-    function solveTask(uint problemId, uint taskId, string memory cipheredAnswer) external {
+    // Solve the task you choosed by submitting siphered by yout seed answer.
+    function solveTask(uint problemId, uint taskId, bytes memory cipheredAnswer) external {
         require(workerToProblem[msg.sender] == problemId, "User is not joined to the problem.");
         require(isTaskNotAnsweredByWorker(problemId, taskId), "Solve the task that already solved by the same user is prohibetted.");
         require(problemToAnswers[problemId].length <= problems[problemId].answersMax, "Max answers submitted.");
@@ -179,11 +180,6 @@ contract ZkTurkContract is Ownable {
         uint answerId = taskAnswers.length - 1;
         problemToAnswers[problemId].push(answerId);
         workerToProblemAnswers[msg.sender][problemId].push(answerId);
-    }
-
-    function getDecipheredAnswer(string memory cipheredAnswer, string memory decipherKey) pure public returns(string memory) {
-        // TODO: implement.
-        return cipheredAnswer;
     }
 
     function compareStrings(string memory s1, string memory s2) private pure returns(bool) {
@@ -208,19 +204,27 @@ contract ZkTurkContract is Ownable {
     /*
         It checks that with deciphering it makes allowed answer and pay and return stak.
     */
-    function withdrawAndDecipher(address worker, uint problemId, string memory decipherKey) external {
+    function withdrawAndDecipher(
+        address worker,
+        uint problemId,
+        string memory answer,
+        string memory seedPhrase
+    ) external {
         // TODO: checks.
 
         uint[] memory workerAnswers = workerToProblemAnswers[worker][problemId];
 
         uint decipheredTaskAnswersCounter = 0;
+        string memory composedSeed = string.concat(answer, seedPhrase);
+        // Iterate through worker addresses.
         for (uint i=0; i < workerAnswers.length; i++) {
             TaskAnswer storage taskAnswer = taskAnswers[workerAnswers[i]];
-            if (!compareStrings(taskAnswer.decipherKey, NO_KEY_FLAG)) {
-                string memory decipheredAnswer = getDecipheredAnswer(taskAnswer.cipheredAnswer, decipherKey);
-                require(isAnswerAllowed(decipheredAnswer, problemId), "Answer is not allowed.");
+            if (compareStrings(taskAnswer.answer, NO_KEY_FLAG)) {
+                // TODO: try/except.
+                assertInvalidSignature(worker, composedSeed, taskAnswer.cipheredAnswer);
+                require(isAnswerAllowed(answer, problemId), "Answer is not allowed.");
 
-                taskAnswer.decipherKey = decipherKey;
+                taskAnswer.answer = answer;
                 decipheredTaskAnswersCounter += 1;
             }
         }

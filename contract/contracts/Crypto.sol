@@ -6,13 +6,20 @@ pragma solidity ^0.8.1;
 contract Crypto {
     event Console(address a);
 
-    // How to use example.
-    function test(address signer, string memory seed, bytes memory signature) external {
+    // No use.
+    modifier validSignatureRequired(address signer, string memory seed, bytes memory signature) {
         require(isValidSignature(signer, seed, signature), "Signature is not valid.");
+        _;
     }
 
-    // Store signatures
-    // supply seed and wirhdraw
+    // TODO: remove.
+    function test(address signer, string memory seed, bytes memory signature) external  {
+        assertInvalidSignature(signer, seed, signature);
+    }
+
+    function assertInvalidSignature(address signer, string memory seed, bytes memory signature) internal  {
+        require(isValidSignature(signer, seed, signature), "Signature is not valid.");
+    }
 
     function isValidSignature(address signer, string memory seedPhrase, bytes memory signature)
         // internal
