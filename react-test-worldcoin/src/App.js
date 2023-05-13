@@ -3,8 +3,15 @@ import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 
 function App() {
 
+	const handleProof = (result) => {
+		return new Promise((resolve) => {
+			setTimeout(() => resolve(), 3000);
+			// NOTE: Example of how to decline the verification request and show an error message to the user
+		});
+	};
+
 	const onSuccess = (result) => {
-		console.log(result);
+		console.log("IS_RESULT", result);
 	};
 
 //	const urlParams = new URLSearchParams(window.location.search);
@@ -30,7 +37,7 @@ function App() {
 				action={action}
 				signal="my_signal"
 				onSuccess={onSuccess}
-//				handleVerify={handleProof}
+				handleVerify={handleProof}
 				app_id={app_id}
 //				credential_types={credential_types}
 				// walletConnectProjectId="get_this_from_walletconnect_portal"
