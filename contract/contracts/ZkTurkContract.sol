@@ -7,12 +7,16 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "hardhat/console.sol";
 
+import { ByteHasher } from "./ByteHasher.sol";
+import { IWorldID } from "./IWorldID.sol";
+
 
 contract ZkTurkContract is Ownable {
     //  TODO: reorder vars to save space.
     string NO_KEY_FLAG = "none";
     uint immutable problemFee;
     uint immutable problemStake;
+    bool immutable useVerification;
 
     // To store problem that have tasks and set of answers.
     struct Problem {
@@ -45,10 +49,31 @@ contract ZkTurkContract is Ownable {
     mapping(address => mapping(uint => uint[])) workerToProblemAnswers;
     // workerToProblemAnswers[workerAddress][problemId] -> answers ids.
 
-    constructor(uint _problemFee, uint _problemStake)
-    {
+    // WorldID stuff
+    using ByteHasher for bytes;
+
+    /// @notice Thrown when attempting to reuse a nullifier
+	error InvalidNullifier();
+
+	/// @dev The World ID instance that will be used for verifying proofs
+	IWorldID internal immutable worldId;
+
+	/// @dev The contract's external nullifier hash
+	uint256 internal immutable externalNullifier;
+
+	/// @dev The World ID group ID (always 1)
+	uint256 internal immutable groupId = 1;
+
+    // @dev Whether a nullifier hash has been used already. Used to guarantee any problem is only performed once by a single person
+	mapping(uint256 => mapping(uint => bool)) internal nullifierHashesPerProblem;
+
+    constructor(uint _problemFee, uint _problemStake, bool _useVerification, IWorldID _worldId, string memory _appId, string memory _actionId) {
         problemFee = _problemFee;
         problemStake = _problemStake;
+        useVerification = _useVerification;
+
+		worldId = _worldId;
+		externalNullifier = abi.encodePacked(abi.encodePacked(_appId).hashToField(), _actionId).hashToField();
     }
     // TODO: change fee method.
 
@@ -79,14 +104,39 @@ contract ZkTurkContract is Ownable {
     }
 
     // Stake is returnable if even 1 answer sumbitted.
-    function joinProblem(uint problemId, string memory worldIdHash) payable external {
+    function joinProblem(
+        uint problemId,
+        address signal,
+        uint256 root,
+        uint256 nullifierHash,
+        uint256[8] calldata proof
+    ) payable external {
+        if (useVerification) {
+            // WorldID verification (unique human is allowed to join only once per problem, also check if signal equals to caller)
+            require(msg.sender == signal, "Someone is trying to use proof for another user");
+
+            if (nullifierHashesPerProblem[nullifierHash][problemId]) revert InvalidNullifier();
+
+            // We now verify the provided proof is valid and the user is verified by World ID
+            worldId.verifyProof(
+                root,
+                groupId,
+                abi.encodePacked(signal).hashToField(),
+                nullifierHash,
+                externalNullifier,
+                proof
+            );
+
+            // We now record the user has done this, so they can't do it again (proof of uniqueness)
+            nullifierHashesPerProblem[nullifierHash][problemId] = true;
+        }
+
         require(msg.value == problemStake, "Not Enough Eth.");
         require(problemId < problems.length, "Problem does not exist.");
         Problem memory problem = problems[problemId];
         require(problemWorkersCounts[problemId] < problem.workersMax);
         require(workerToProblem[msg.sender] == 0, "Already in the problem.");
 
-        // TODO: work with worldIdHash and proof and store?
         workerToProblem[msg.sender] = problemId;
         workerToStakeId[msg.sender] = problemId;
         problemWorkersCounts[problemId] += 1;

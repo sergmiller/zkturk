@@ -23,11 +23,15 @@ describe("ZkTurkContract", function () {
     DEF_ANS_MAX= 2
 
     let contract = null
+    let worldIdContract = null
     let defaultWorker = null
 
     beforeEach(async () => {
         const Storage = await ethers.getContractFactory("ZkTurkContract");
-        contract = await Storage.deploy(DEF_FEE, DEF_FEE);
+        const WorldID = await ethers.getContractFactory("DummyWorldID");
+        worldIdContract = await WorldID.deploy()
+        worldIdContract.deployed();
+        contract = await Storage.deploy(DEF_FEE, DEF_FEE, false, worldIdContract.address, "dummy_app_id", "dummy_action");
         contract.deployed();
         const [, worker1] = await ethers.getSigners();
         defaultWorker = worker1
@@ -50,14 +54,9 @@ describe("ZkTurkContract", function () {
         await addProblem.wait()
     }
 
-    xdescribe("#addProblem", () => {
+    describe("#addProblem", () => {
         it("it adds problem successfully", async function () {
-            // const provider = ethers.getDefaultProvider();
             const [owner, ] = await ethers.getSigners();
-            // console.log('here');
-            // console.log(owner.address);
-            // const balance = await provider.getBalance(owner.address);
-            // console.log(balance.toNumber())
 
             await addDefaultProblem()
             const problem = await contract.problems(1)
@@ -67,10 +66,14 @@ describe("ZkTurkContract", function () {
 
     async function _joinDefaultProblem(worker=defaultWorker) {
         const options = {value: DEF_FEE}
-        await contract.connect(worker).joinProblem(1, 'worldIdhash', options)
+        let root = 123;
+        let nullifierHash = 456;
+        let proof = [1,2,3,4,5,6,7,8];
+
+        await contract.connect(worker).joinProblem(1, defaultWorker.address, root, nullifierHash, proof, options)
     }
 
-    xdescribe("#joinProblem", () => {
+    describe("#joinProblem", () => {
         it("it joins successfully", async function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
@@ -82,6 +85,14 @@ describe("ZkTurkContract", function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
             await shouldThrow(_joinDefaultProblem())
+        })
+
+        it("it does not allow to join another problem while 1 is active", async function () {
+            await addDefaultProblem()
+            await _joinDefaultProblem()
+            await addDefaultProblem()  // it adds 2
+            const options = {value: DEF_FEE}
+            await shouldThrow(contract.connect(defaultWorker).joinProblem(2, 'worldIdhash', options))
         })
 
         it("it allows to join another worker", async function () {
@@ -100,7 +111,7 @@ describe("ZkTurkContract", function () {
         })
     })
 
-    xdescribe("#solveTask", () => {
+    describe("#solveTask", () => {
         it("it solves task successfully", async function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
