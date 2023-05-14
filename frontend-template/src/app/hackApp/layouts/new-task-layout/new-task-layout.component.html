@@ -1,18 +1,18 @@
 <div class="grid">
   <div class="col-12">
     <div class="card">
-      <h4>Create task</h4>
+      <h4>Create problem</h4>
       <div class="p-fluid p-formgrid grid">
         <div class="field field-margin-0 col-12 md:col-4">
           <label htmlFor="Name">Name</label>
-          <input pInputText id="Name" type="text" />
+          <input pInputText id="Name" type="text"  [(ngModel)]="title"/>
         </div>
         <div class="field field-margin-0 col-12 md:col-4">
           <label htmlFor="PriceForOne">PriceForOne</label>
-          <input pInputText id="PriceForOne" type="text" />
+          <input pInputText id="PriceForOne" type="text" [(ngModel)]="priceForOne" />
         </div>
         <div class="field field-margin-0 col-12 md:col-4">
-          <label htmlFor="Overshoto">Overshoto</label>
+          <label htmlFor="Overshoto">Overlap</label>
           <input pInputText id="Overshoto" type="text" />
         </div>
         <div class="field field-margin-0 col-12">
@@ -20,7 +20,7 @@
           <textarea rows="5" cols="30" placeholder="Your Message" pInputTextarea></textarea>
         </div>
 
-        <div class="field field-margin-0 col-12">
+        <!-- <div class="field field-margin-0 col-12">
           <label>Files</label>
           <p-fileUpload
             mode="advanced"
@@ -35,17 +35,49 @@
             accept="image/*"
             [maxFileSize]="1000000"
           >
-            <!-- <ng-template pTemplate="content">
+            <ng-template pTemplate="content">
               <ul *ngIf="uploadedFiles.length">
                 <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
               </ul>
-            </ng-template> -->
+            </ng-template>
           </p-fileUpload>
-        </div>
+        </div> -->
 
         <div class="field field-margin-0 col-12">
+          <div class="p-inputgroup">
+            <button type="button" pButton pRipple label="Submit" (click)="pushImage()"></button>
+            <input type="text" #imageInput pInputText placeholder="image url" />
+          </div>
+
+          <div *ngIf="images.length" class="images">
+            <label>image links</label>
+            <ul>
+              <li *ngFor="let image of images">
+                {{ image }} <span (click)="removeImage(image)" class="p-menuitem-icon pi pi-fw ng-star-inserted cancel-icon"></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- <div class="field field-margin-0 col-12">
           <label htmlFor="address">Variants (separated by commas)</label>
           <textarea rows="2" cols="30" placeholder="one, two, three" pInputTextarea></textarea>
+        </div> -->
+
+        <div class="field field-margin-0 col-12">
+          <div class="p-inputgroup">
+            <button type="button" pButton pRipple label="Submit" (click)="pushVariant()"></button>
+            <input type="text" #variantInput pInputText placeholder="Variant" />
+          </div>
+
+          <div *ngIf="variants.length" class="variants">
+            <label>Variants</label>
+            <ul>
+              <li *ngFor="let variant of variants">
+                {{ variant }} <span (click)="removeVariant(variant)" class="p-menuitem-icon pi pi-fw ng-star-inserted cancel-icon"></span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <!-- <div class="field col-12 md:col-6">

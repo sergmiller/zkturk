@@ -9,15 +9,16 @@ import { MyEventService } from "../../services/event.service";
 export class AllMyTasksLayoutComponent {
   public tasks = [1, 2, 3];
 
-  public openedTask: any;
+  // public openedTask: any;
 
-  constructor(private eventService: MyEventService) {
-    this.eventService.startTaskEvent.subscribe((data) => {
-      this.openTask(data);
-    });
-  }
+  // constructor(private eventService: MyEventService) {
+  //   this.eventService.startTaskEvent.subscribe((data) => {
+  //     this.openTask(data);
+  //   });
+  // }
 
-  private openTask(task: any) {
-    this.openedTask = task;
-  }
+  // private openTask(task: any) {
+  //   console.log("openTask: ", task);
+  //   this.openedTask = task;
+  // }
 }

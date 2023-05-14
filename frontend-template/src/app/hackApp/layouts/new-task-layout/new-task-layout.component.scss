@@ -8,7 +8,23 @@
   justify-content: space-between;
 }
 
+.images,
+.variants {
+  margin-top: .5em;
 
+  ul {
+    margin: .5em 0 .5em 0;
+  }
+}
+
+.cancel-icon {
+  cursor: pointer;
+  font-size: 10px;
+
+  &::before {
+    content: "\e90b";
+  }
+}
 
 :host ::ng-deep {
 

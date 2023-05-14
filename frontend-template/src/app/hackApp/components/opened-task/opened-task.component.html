@@ -1,0 +1,36 @@
+<div class="opened-task-wrapper">
+  <div class="task-header">
+    <a (click)="closeTask()" class="back-link"
+      ><h5><img src="assets\layout\images\arrow-for-link.svg" class="back-icon" alt="" />All tasks</h5></a
+    >
+  </div>
+
+  <div class="task-header">
+    <h5>Task name</h5>
+    <div class="price">0.01 for task</div>
+  </div>
+
+  <label>description</label>
+  <p>
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora, modi consequuntur? Molestiae magni doloremque ipsa beatae sequi pariatur
+    perferendis temporibus nulla, accusantium, in labore suscipit animi quam corporis libero repudiandae.
+  </p>
+
+  <div class="sub-task border-round border-1 surface-border p-3" *ngFor="let subTask of sutTasks">
+    <img [src]="subTask.image" alt="" />
+
+    <!-- <div class="variants"> -->
+    <div class="flex flex-wrap gap-3">
+      <div class="flex align-items-center" *ngFor="let variant of variants">
+        <p-radioButton [name]="variant" [value]="variant" [(ngModel)]="subTask.selectedVariand" [inputId]="variant"></p-radioButton>
+        <label [for]="variant" class="ml-2">{{ variant }}</label>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
+
+  <div class="task-footer">
+    <div></div>
+    <button (click)="completeTask()" class="submit-button" pButton label="Complete and withdraw"></button>
+  </div>
+</div>

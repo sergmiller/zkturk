@@ -76,6 +76,13 @@
   line-height: 19px;
   letter-spacing: 0em;
 
+
+  display: flex;
+  align-items: center;
+
+  img {
+    margin-left: 8px;
+  }
 }
 
 @media (min-width: 992px) {

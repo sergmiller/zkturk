@@ -5,7 +5,7 @@ import { Subject, BehaviorSubject } from "rxjs";
   providedIn: "root",
 })
 export class MyEventService {
-  public startTaskEvent: BehaviorSubject<any> = new BehaviorSubject({});
+  public startTaskEvent: BehaviorSubject<any> = new BehaviorSubject(undefined);
 
   constructor() {}
 }

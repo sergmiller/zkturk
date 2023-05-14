@@ -4,6 +4,7 @@ import { MetamaskStateService } from "./metamask-state.service";
 import { runInAction } from "mobx";
 import { MetamaskUtils } from "./metamask-utils";
 import Web3 from "web3";
+import { TurkContractClient } from "./turk-contrakt-client/TurkContractClient";
 
 interface MetaMaskEthereumProvider {
   isMetaMask?: boolean;
@@ -22,6 +23,8 @@ export class MetamaskProviderService {
   private anyMetamaskProvider: any | undefined;
 
   private web3: any | undefined;
+
+  private turkContraksClient: TurkContractClient | undefined;
 
   constructor(private metamaskStateService: MetamaskStateService) {
     console.log("MetamaskProviderService constructor!");
@@ -45,17 +48,19 @@ export class MetamaskProviderService {
   private async detectMetamask() {
     const provider = await detectEthereumProvider();
 
-    console.log("%cweb3", "color:blue", this.web3);
-
     if (provider) {
       this.metamaskProvider = provider;
       this.anyMetamaskProvider = provider;
       this.web3 = new Web3(provider as any);
 
-      console.log("%cMetamask successfully detected!", "color: green");
+      this.turkContraksClient = new TurkContractClient(this.web3);
 
+      console.log("%cweb3", "color:blue", this.web3);
+      console.log("%cturkContraksClient", "color:blue", this.turkContraksClient);
+
+      console.log("%c=== Metamask successfully detected! ===", "color: green");
       const accounts = await this.anyMetamaskProvider.request({ method: "eth_accounts" });
-      console.log("refreshedAccounts: ", accounts);
+      // console.log("refreshedAccounts: ", accounts);
       this.refreshAccounts(accounts);
       this.metamaskProvider.on("chainChanged", this.handleChainChanged);
       this.anyMetamaskProvider.on("accountsChanged", this.refreshAccounts); /* New */
@@ -78,7 +83,7 @@ export class MetamaskProviderService {
   }
 
   private async updateWallet(accounts: string[]) {
-    console.log("accounts: ", accounts);
+    // console.log("accounts: ", accounts);
     runInAction(() => {
       this.metamaskStateService.accounts = accounts;
     });
@@ -101,5 +106,18 @@ export class MetamaskProviderService {
     runInAction(() => {
       this.metamaskStateService.chainId = chainId;
     });
+
+    this.getProblems();
+  }
+
+  private async getProblems() {
+    if (this.turkContraksClient) {
+      const problems = await this.turkContraksClient.getAvailableProblems();
+      console.log("%cproblems: ", "color: green", problems);
+
+      runInAction(() => {
+        this.metamaskStateService.avalibleProblems = problems;
+      });
+    }
   }
 }

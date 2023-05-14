@@ -1,8 +1,9 @@
 <div class="grid">
   <div class="col-12">
     <div class="card">
-      <div class="all-tasks-wrapper" *ngIf="!openedTask">
-        <h4>All my tasks</h4>
+      <div class="all-tasks-wrapper">
+        <!-- <h4>All my tasks</h4> -->
+        <h4>All my problems</h4>
 
         <div class="tasks-wrapper">
           <div *ngFor="let task of tasks">
@@ -10,8 +11,6 @@
           </div>
         </div>
       </div>
-
-      <div class="opened-task" *ngIf="openedTask"></div>
     </div>
   </div>
 </div>

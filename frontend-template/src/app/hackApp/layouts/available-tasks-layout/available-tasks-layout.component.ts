@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { MyEventService } from "../../services/event.service";
 
 @Component({
   selector: "app-available-tasks-layout",
@@ -7,4 +8,17 @@ import { Component } from "@angular/core";
 })
 export class AvailableTasksLayoutComponent {
   public tasks = [1, 2, 3];
+
+  public openedTask: any;
+
+  constructor(private eventService: MyEventService) {
+    this.eventService.startTaskEvent.subscribe((data) => {
+      this.openTask(data);
+    });
+  }
+
+  private openTask(task: any) {
+    console.log("%copenTask: ", "color: red", task);
+    this.openedTask = task;
+  }
 }

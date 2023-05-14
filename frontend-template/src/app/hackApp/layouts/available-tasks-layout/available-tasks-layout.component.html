@@ -1,15 +1,20 @@
 <div class="grid">
   <div class="col-12">
     <div class="card">
-      <h4>Available tasks</h4>
+      <div class="all-tasks-wrapper" *ngIf="!openedTask">
+        <!-- <h4>Available tasks</h4> -->
+        <h4>Available problems</h4>
 
-
-      <div class="tasks-wrapper">
-        <div *ngFor="let task of tasks">
-          <app-task-card></app-task-card>
+        <div class="tasks-wrapper">
+          <div *ngFor="let task of tasks">
+            <app-task-card [task]="task"></app-task-card>
+          </div>
         </div>
       </div>
 
+      <div class="opened-task" *ngIf="openedTask">
+        <app-opened-task [task]="openedTask"></app-opened-task>
+      </div>
     </div>
   </div>
 </div>

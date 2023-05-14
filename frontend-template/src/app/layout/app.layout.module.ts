@@ -42,6 +42,7 @@ import { FileUploadModule } from "primeng/fileupload";
 import { MyLandingComponent } from "../hackApp/layouts/my-landing/my-landing.component";
 import { TaskCardComponent } from "../hackApp/components/task-card/task-card.component";
 import { ReactWrapper } from "../hackApp/react/react-wrapper";
+import { OpenedTaskComponent } from "../hackApp/components/opened-task/opened-task.component";
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ReactWrapper } from "../hackApp/react/react-wrapper";
     MyLandingComponent,
     TaskCardComponent,
     ReactWrapper,
+    OpenedTaskComponent,
   ],
   imports: [
     BrowserModule,
@@ -96,19 +98,19 @@ import { ReactWrapper } from "../hackApp/react/react-wrapper";
     FileUploadModule,
   ],
   exports: [
-    AppLayoutComponent,
+    // AppLayoutComponent,
     AppMenuitemComponent,
-    AppTopBarComponent,
+    // AppTopBarComponent,
     AppFooterComponent,
     AppMenuComponent,
     AppSidebarComponent,
-    AppLayoutComponent,
     MyTopBarComponent,
     MyAppLayoutComponent,
     MySidebarComponent,
     MyMenuComponent,
     MyLandingComponent,
     TaskCardComponent,
+    OpenedTaskComponent,
   ],
 })
 export class AppLayoutModule {}

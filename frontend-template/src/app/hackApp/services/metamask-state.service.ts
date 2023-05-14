@@ -1,5 +1,6 @@
 ﻿import { Injectable } from "@angular/core";
 import { observable, makeObservable, action } from "mobx";
+import { ProblemModel } from "./turk-contrakt-client/TurkContractClient";
 
 @Injectable()
 export class MetamaskStateService {
@@ -9,10 +10,13 @@ export class MetamaskStateService {
 
   public chainId: string = "";
 
+  public avalibleProblems: ProblemModel[] = [];
+
   constructor() {
     makeObservable<MetamaskStateService>(this, {
       accounts: observable,
       balance: observable,
+      avalibleProblems: observable.shallow,
       resetState: action,
     });
   }
@@ -21,5 +25,6 @@ export class MetamaskStateService {
     this.accounts = [];
     this.balance = "-.--";
     this.chainId = "";
+    this.avalibleProblems = [];
   }
 }

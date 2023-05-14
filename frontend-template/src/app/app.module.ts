@@ -19,6 +19,7 @@ import { MetamaskStateService } from "./hackApp/services/metamask-state.service"
 import { TaskCardComponent } from "./hackApp/components/task-card/task-card.component";
 import { MyEventService } from "./hackApp/services/event.service";
 import { ReactWrapper } from "./hackApp/react/react-wrapper";
+import { OpenedTaskComponent } from './hackApp/components/opened-task/opened-task.component';
 @NgModule({
   declarations: [AppComponent, NotfoundComponent, MainLayoutComponent, IntegrationLayoutComponent],
   imports: [AppRoutingModule, AppLayoutModule],

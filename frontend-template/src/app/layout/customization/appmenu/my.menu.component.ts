@@ -13,20 +13,20 @@ export class MyMenuComponent implements OnInit {
 
   ngOnInit() {
     this.model = [
-      //   {
-      //     label: "Home",
-      //     items: [{ label: "Dashboard", icon: "pi pi-fw pi-home", routerLink: ["/"] }],
-      //   },
+        // {
+        //   label: "Home",
+        //   items: [{ label: "Home", icon: "pi pi-fw pi-home", routerLink: ["/"] }],
+        // },
 
       {
         label: "My work",
-        items: [{ label: "Available tasks ", icon: "pi pi-fw pi-home", routerLink: ["/available-tasks"] }],
+        items: [{ label: "Available problems ", icon: "pi pi-fw pi-home", routerLink: ["/available-tasks"] }],
       },
       {
         label: "My business ",
         items: [
-          { label: "Create task ", icon: "pi pi-fw pi-home", routerLink: ["/new-task"] },
-          { label: "All my tasks", icon: "pi pi-fw pi-home", routerLink: ["/all-my-tasks"] },
+          { label: "Create problem", icon: "pi pi-fw pi-home", routerLink: ["/new-task"] },
+          { label: "All my problems", icon: "pi pi-fw pi-home", routerLink: ["/all-my-tasks"] },
         ],
       },
     ];

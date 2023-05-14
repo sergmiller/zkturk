@@ -40,7 +40,7 @@ export class MyTopBarComponent implements OnInit, OnDestroy {
       reaction(
         () => this.metamaskStateService.accounts,
         () => {
-          console.log("reaction");
+          // console.log("reaction");
           this.isConnected = this.metamaskProvider.isConnected;
         },
       ),
