@@ -18,5 +18,6 @@ Gnosis Chaido - 0x5a1b840CB796c697C1185dB9F43432C08Ba7B6AA
 ## build frontend instance:
 
 1. `cd frontend-template`
-2. `ng build --configuration=production`
-3. `ng serve --configuration=production`
+2. `npm install`
+3. `ng build --configuration=production`
+4. `ng serve --configuration=production`
