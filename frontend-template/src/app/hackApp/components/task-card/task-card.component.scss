@@ -1,0 +1,14 @@
+.task-wrapper {}
+
+
+
+.task-header,
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+label {
+  font-weight: 600;
+}

@@ -1,0 +1,101 @@
+:host {
+  font-family: 'Montserrat';
+  font-style: normal;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #353A3F;
+
+  h4,
+  p,
+  a {
+    font-family: 'Montserrat';
+    font-style: normal;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #353A3F;
+  }
+}
+
+.header-text {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 39px;
+  margin-bottom: 60px;
+}
+
+.big-text {
+  position: relative;
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 77px;
+  z-index: 5;
+  margin-bottom: 60px;
+
+  &.circle::before,
+  &.square::before {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    background: #FAE696;
+    width: 108px;
+    height: 108px;
+  }
+
+  &.circle::before {
+    left: -22px;
+    top: -25px;
+    border-radius: 100%;
+  }
+
+
+  &.square::before {
+    left: 0px;
+    top: -5px;
+    transform: rotate(45deg);
+  }
+}
+
+.bottom-header-text {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 29px;
+
+}
+
+.bottom-text {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+
+  margin: 16px 0;
+}
+
+.bottom-link {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19px;
+  letter-spacing: 0em;
+
+}
+
+@media (min-width: 992px) {
+  .header-text {
+    font-size: 32px;
+  }
+
+  .big-text {
+    font-size: 64px;
+  }
+
+  .bottom-header-text {
+    font-size: 24px;
+  }
+
+  .bottom-text {
+    font-size: 16px;
+  }
+
+  .bottom-link {
+    font-size: 16px;
+  }
+}
