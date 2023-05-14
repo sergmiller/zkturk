@@ -26,6 +26,8 @@ export class MetamaskProviderService {
 
   private turkContraksClient: TurkContractClient | undefined;
 
+  private turkContraksClient: TurkContractClient | undefined;
+
   constructor(private metamaskStateService: MetamaskStateService) {
     console.log("MetamaskProviderService constructor!");
     this.detectMetamask();
@@ -106,6 +108,19 @@ export class MetamaskProviderService {
     runInAction(() => {
       this.metamaskStateService.chainId = chainId;
     });
+
+    this.getProblems();
+  }
+
+  private async getProblems() {
+    if (this.turkContraksClient) {
+      const problems = await this.turkContraksClient.getAvailableProblems();
+      console.log("%cproblems: ", "color: green", problems);
+
+      runInAction(() => {
+        this.metamaskStateService.avalibleProblems = problems;
+      });
+    }
 
     this.getProblems();
   }
