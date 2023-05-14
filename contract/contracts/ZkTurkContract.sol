@@ -15,9 +15,9 @@ import { IWorldID } from "./IWorldID.sol";
 contract ZkTurkContract is Ownable, Crypto {
     //  TODO: reorder vars to save space.
     string NO_KEY_FLAG = "none";
-    uint immutable problemFee;
-    uint immutable problemStake;
-    bool immutable useVerification;
+    uint immutable public problemFee;
+    uint immutable public problemStake;
+    bool public useVerification;
 
     // To store problem that have tasks and set of answers.
     struct Problem {
