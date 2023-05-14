@@ -1,4 +1,8 @@
 # zkturk
+
+Live demo (if link doesn't work please ask for another) 
+https://4a50-95-95-67-159.ngrok-free.app/
+
 ZkMechanicalTurk project for ETH LISBON
 
 1. `contract` - all code for on-chain contracts and tests for them (TurkContract, WorldID)
