@@ -41,6 +41,7 @@ import { AvailableTasksLayoutComponent } from "../hackApp/layouts/available-task
 import { FileUploadModule } from "primeng/fileupload";
 import { MyLandingComponent } from "../hackApp/layouts/my-landing/my-landing.component";
 import { TaskCardComponent } from "../hackApp/components/task-card/task-card.component";
+import { ReactWrapper } from "../hackApp/react/react-wrapper";
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { TaskCardComponent } from "../hackApp/components/task-card/task-card.com
     AvailableTasksLayoutComponent,
     MyLandingComponent,
     TaskCardComponent,
+    ReactWrapper,
   ],
   imports: [
     BrowserModule,

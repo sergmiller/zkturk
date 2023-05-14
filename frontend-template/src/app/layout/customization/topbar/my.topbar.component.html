@@ -1,13 +1,13 @@
 <div class="layout-topbar">
   <a class="layout-topbar-logo" routerLink="">
     <!-- <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo"> -->
-    <img src="assets/layout/images/my-logo.svg" alt="logo">
+    <img src="assets/layout/images/my-logo.svg" alt="logo" />
     <span>ZkMTurk</span>
   </a>
 
   <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
-        <i class="pi pi-bars"></i>
-    </button>
+    <i class="pi pi-bars"></i>
+  </button>
 
   <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
     <i class="pi pi-ellipsis-v"></i>
@@ -29,11 +29,14 @@
     <!-- <button #menubutton class="p-link layout-menu-button layout-topbar-button">
       <i class="pi pi-bars"></i>
     </button> -->
+    <!-- <app-world-id></app-world-id> -->
 
     <div class="layout-topbar-logo balance-block">
       <span> {{ balance }} </span>Earned
     </div>
-
+    <div class="react-button">
+      <react-wrapper></react-wrapper>
+    </div>
     <button
       [disabled]="isConnected"
       pButton

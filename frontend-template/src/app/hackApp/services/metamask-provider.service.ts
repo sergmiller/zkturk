@@ -3,6 +3,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import { MetamaskStateService } from "./metamask-state.service";
 import { runInAction } from "mobx";
 import { MetamaskUtils } from "./metamask-utils";
+import Web3 from "web3";
 
 interface MetaMaskEthereumProvider {
   isMetaMask?: boolean;
@@ -19,6 +20,8 @@ export class MetamaskProviderService {
   private metamaskProvider: MetaMaskEthereumProvider | undefined;
 
   private anyMetamaskProvider: any | undefined;
+
+  private web3: any | undefined;
 
   constructor(private metamaskStateService: MetamaskStateService) {
     console.log("MetamaskProviderService constructor!");
@@ -42,9 +45,12 @@ export class MetamaskProviderService {
   private async detectMetamask() {
     const provider = await detectEthereumProvider();
 
+    console.log("%cweb3", "color:blue", this.web3);
+
     if (provider) {
       this.metamaskProvider = provider;
       this.anyMetamaskProvider = provider;
+      this.web3 = new Web3(provider as any);
 
       console.log("%cMetamask successfully detected!", "color: green");
 

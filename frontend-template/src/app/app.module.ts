@@ -18,6 +18,7 @@ import { configure } from "mobx";
 import { MetamaskStateService } from "./hackApp/services/metamask-state.service";
 import { TaskCardComponent } from "./hackApp/components/task-card/task-card.component";
 import { MyEventService } from "./hackApp/services/event.service";
+import { ReactWrapper } from "./hackApp/react/react-wrapper";
 @NgModule({
   declarations: [AppComponent, NotfoundComponent, MainLayoutComponent, IntegrationLayoutComponent],
   imports: [AppRoutingModule, AppLayoutModule],
@@ -27,7 +28,6 @@ import { MyEventService } from "./hackApp/services/event.service";
     CustomerService,
     EventService,
     IconService,
-    NodeService,
     PhotoService,
     ProductService,
     MetamaskProviderService,
