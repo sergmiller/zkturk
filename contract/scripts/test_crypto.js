@@ -17,7 +17,7 @@ describe("foo", function () {
         it("foo", async function () {
             // Use ehters to deploy.
             const Contract = await ethers.getContractFactory("Crypto");
-            contract = await Contract.deploy();
+            const contract = await Contract.deploy();
             contract.deployed();
             console.log('Contract deployed at', contract.address)
 

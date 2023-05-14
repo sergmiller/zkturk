@@ -44,7 +44,7 @@ describe("ZkTurkContract", function () {
         // TODO: to work with 0 in mapping of "workerToProblem";
         await addDefaultProblem()
         const accounts = await web3.eth.getAccounts()
-        signer = accounts[1]
+        const signer = accounts[1]
         // TODO: assert and resolve.
         // console.log(signer)
         // console.log(defaultWorker)
@@ -162,14 +162,14 @@ describe("ZkTurkContract", function () {
             const workerToProblemAnswers = await contract.workerToProblemAnswers(defaultWorker.address, 1, 0)
             console.log('workerToProblemAnswers', workerToProblemAnswers.toString())
 
-            await contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, DEF_ASNWERS[0], DEF_SEED)
+            await contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, [0], [DEF_ASNWERS[0]], DEF_SEED)
         })
 
         it("it does not accept random seed", async function () {
             await addDefaultProblem()
             await _joinDefaultProblem()
             await contract.connect(defaultWorker).solveTask(1, 0, defCipheredAnswer)
-            await shouldThrow(contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, DEF_ASNWERS[0], 'randomSeed'))
+            await shouldThrow(contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, [0], [DEF_ASNWERS[0]], 'randomSeed'))
         })
 
         it("it does not allow non existed answer", async function () {
@@ -177,7 +177,7 @@ describe("ZkTurkContract", function () {
             await _joinDefaultProblem()
             const answerDoesNotExist = await cryptoContractClient.getSignedMessage('answerDoesNotExist', DEF_SEED)
             await contract.connect(defaultWorker).solveTask(1, 0, answerDoesNotExist)
-            await shouldThrow(contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, 'answerDoesNotExist', DEF_SEED))
+            await shouldThrow(contract.connect(defaultWorker).withdrawAndDecipher(defaultWorker.address, 1, [0], ['answerDoesNotExist'], DEF_SEED))
         })
     })
 });

@@ -35,7 +35,7 @@ contract ZkTurkContract is Ownable, Crypto {
     // To store number of workers per problem.
     uint[] problemWorkersCounts;
 
-    mapping(address => uint) public workerToProblem; // TODO: to problems (MVP - 1 worker could solve simultaniously only 1 problem)
+    mapping(address => uint) workerToProblem; // TODO: to problems (MVP - 1 worker could solve simultaniously only 1 problem)
     mapping(address => uint) workerToStakeId;  // stake id is similar to the problem id.  (MVP - 1 worker could solve simultaniously only 1 problem)
 
     struct TaskAnswer {
@@ -78,21 +78,9 @@ contract ZkTurkContract is Ownable, Crypto {
     }
     // TODO: change fee method.
 
-    function setUseVerification(bool _state) onlyOwner external {
-        useVerification = _state;
-    }
-
-    function getProblem(uint problemId) public view returns (Problem memory) {
-        return problems[problemId];
-    }
-
     function getProblems() public view returns (Problem[] memory) {
         return problems;
     }
-
-    // function getWorkerToProblemAnswers(address worker, uint problemId) public view returns ([] memory) {
-    //     return problems;
-    // }
 
     function addProblem(
         string memory title,
@@ -217,41 +205,30 @@ contract ZkTurkContract is Ownable, Crypto {
 
     }
 
-    function withdrawAndForget() external {
-        uint activeProblemId = workerToProblem[msg.sender];
-        if (activeProblemId != 0) {
-            delete workerToProblem[msg.sender];
-            delete workerToStakeId[msg.sender];
-            problemWorkersCounts[activeProblemId] -= 1;
-        }
-    }
-
     /*
         It checks that with deciphering it makes allowed answer and pay and return stak.
     */
     function withdrawAndDecipher(
         address worker,
         uint problemId,
-        uint[] memory taskIds,
-        string[] memory answers,
+        string memory answer,
         string memory seedPhrase
     ) external {
         // TODO: checks.
 
-        // uint[] memory workerAnswers = workerToProblemAnswers[worker][problemId];
+        uint[] memory workerAnswers = workerToProblemAnswers[worker][problemId];
 
         uint decipheredTaskAnswersCounter = 0;
+        string memory composedSeed = string.concat(answer, seedPhrase);
         // Iterate through worker addresses.
-        for (uint i=0; i < taskIds.length; i++) {
-            string memory composedSeed = string.concat(answers[i], seedPhrase);
-
-            TaskAnswer storage taskAnswer = taskAnswers[taskIds[i]];
+        for (uint i=0; i < workerAnswers.length; i++) {
+            TaskAnswer storage taskAnswer = taskAnswers[workerAnswers[i]];
             if (compareStrings(taskAnswer.answer, NO_KEY_FLAG)) {
                 // TODO: try/except.
                 assertInvalidSignature(worker, composedSeed, taskAnswer.cipheredAnswer);
-                require(isAnswerAllowed(answers[i], problemId), "Answer is not allowed.");
+                require(isAnswerAllowed(answer, problemId), "Answer is not allowed.");
 
-                taskAnswer.answer = answers[i];
+                taskAnswer.answer = answer;
                 decipheredTaskAnswersCounter += 1;
             }
         }

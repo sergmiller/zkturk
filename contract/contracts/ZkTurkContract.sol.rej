@@ -1,0 +1,9 @@
+@@ -17,7 +17,7 @@
+     string NO_KEY_FLAG = "none";
+     uint immutable public problemFee;
+     uint immutable public problemStake;
+-    bool immutable useVerification;
++    bool public useVerification;
+ 
+     // To store problem that have tasks and set of answers.
+     struct Problem {

@@ -17,7 +17,7 @@ export class CryptoContractClient {
     }
 
     async signMessage(message) {
-        return await this.web3.eth.sign( // user await web3.eth.personal.sign( in real world.
+        return await this.web3.eth.sign( // TODO: user await web3.eth.personal.sign( in real world.
             message.toString("hex"),
             this.signer,
         );
