@@ -1,231 +1,19 @@
 ﻿//@ts-nocheck
 // Iteration with web3 Poker Room Contract.
-import { getWeb3Accounts } from "./utils/blockchain";
 import { CryptoContractClient } from "./CryptoContractClient";
 
-const CONTRACT_ABI = [
-  {
-    inputs: [
-      { internalType: "uint256", name: "_problemFee", type: "uint256" },
-      { internalType: "uint256", name: "_problemStake", type: "uint256" },
-      { internalType: "bool", name: "_useVerification", type: "bool" },
-      { internalType: "contract IWorldID", name: "_worldId", type: "address" },
-      { internalType: "string", name: "_appId", type: "string" },
-      { internalType: "string", name: "_actionId", type: "string" },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  { inputs: [], name: "InvalidNullifier", type: "error" },
-  { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "a", type: "address" }], name: "Console", type: "event" },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
-      { indexed: true, internalType: "address", name: "newOwner", type: "address" },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    inputs: [
-      { internalType: "string", name: "title", type: "string" },
-      { internalType: "string", name: "description", type: "string" },
-      { internalType: "string[]", name: "urlToImgs", type: "string[]" },
-      { internalType: "string[]", name: "asnwers", type: "string[]" },
-      { internalType: "uint256", name: "workersMax", type: "uint256" },
-      { internalType: "uint256", name: "taskPriceWei", type: "uint256" },
-      { internalType: "uint256", name: "answersMax", type: "uint256" },
-    ],
-    name: "addProblem",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "problemId", type: "uint256" }],
-    name: "getProblem",
-    outputs: [
-      {
-        components: [
-          { internalType: "address", name: "owner", type: "address" },
-          { internalType: "string", name: "title", type: "string" },
-          { internalType: "string", name: "description", type: "string" },
-          { internalType: "string[]", name: "urlToTask", type: "string[]" },
-          { internalType: "string[]", name: "asnwers", type: "string[]" },
-          { internalType: "uint256", name: "workersMax", type: "uint256" },
-          { internalType: "uint256", name: "taskPriceWei", type: "uint256" },
-          { internalType: "uint256", name: "answersMax", type: "uint256" },
-        ],
-        internalType: "struct ZkTurkContract.Problem",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getProblems",
-    outputs: [
-      {
-        components: [
-          { internalType: "address", name: "owner", type: "address" },
-          { internalType: "string", name: "title", type: "string" },
-          { internalType: "string", name: "description", type: "string" },
-          { internalType: "string[]", name: "urlToTask", type: "string[]" },
-          { internalType: "string[]", name: "asnwers", type: "string[]" },
-          { internalType: "uint256", name: "workersMax", type: "uint256" },
-          { internalType: "uint256", name: "taskPriceWei", type: "uint256" },
-          { internalType: "uint256", name: "answersMax", type: "uint256" },
-        ],
-        internalType: "struct ZkTurkContract.Problem[]",
-        name: "",
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "string", name: "answer", type: "string" },
-      { internalType: "uint256", name: "problemId", type: "uint256" },
-    ],
-    name: "isAnswerAllowed",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "signer", type: "address" },
-      { internalType: "string", name: "seedPhrase", type: "string" },
-      { internalType: "bytes", name: "signature", type: "bytes" },
-    ],
-    name: "isValidSignature",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint256", name: "problemId", type: "uint256" },
-      { internalType: "address", name: "signal", type: "address" },
-      { internalType: "uint256", name: "root", type: "uint256" },
-      { internalType: "uint256", name: "nullifierHash", type: "uint256" },
-      { internalType: "uint256[8]", name: "proof", type: "uint256[8]" },
-    ],
-    name: "joinProblem",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "problemFee", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "problemStake", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  {
-    inputs: [
-      { internalType: "uint256", name: "problemId", type: "uint256" },
-      { internalType: "uint256", name: "", type: "uint256" },
-    ],
-    name: "problemToAnswers",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    name: "problems",
-    outputs: [
-      { internalType: "address", name: "owner", type: "address" },
-      { internalType: "string", name: "title", type: "string" },
-      { internalType: "string", name: "description", type: "string" },
-      { internalType: "uint256", name: "workersMax", type: "uint256" },
-      { internalType: "uint256", name: "taskPriceWei", type: "uint256" },
-      { internalType: "uint256", name: "answersMax", type: "uint256" },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
-  {
-    inputs: [{ internalType: "bool", name: "_state", type: "bool" }],
-    name: "setUseVerification",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint256", name: "problemId", type: "uint256" },
-      { internalType: "uint256", name: "taskId", type: "uint256" },
-      { internalType: "bytes", name: "cipheredAnswer", type: "bytes" },
-    ],
-    name: "solveTask",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    name: "taskAnswers",
-    outputs: [
-      { internalType: "uint256", name: "problemId", type: "uint256" },
-      { internalType: "uint256", name: "taskId", type: "uint256" },
-      { internalType: "address", name: "worker", type: "address" },
-      { internalType: "bytes", name: "cipheredAnswer", type: "bytes" },
-      { internalType: "string", name: "answer", type: "string" },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "signer", type: "address" },
-      { internalType: "string", name: "seed", type: "string" },
-      { internalType: "bytes", name: "signature", type: "bytes" },
-    ],
-    name: "test",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  { inputs: [], name: "useVerification", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" },
-  {
-    inputs: [
-      { internalType: "address", name: "worker", type: "address" },
-      { internalType: "uint256", name: "problemId", type: "uint256" },
-      { internalType: "uint256[]", name: "taskIds", type: "uint256[]" },
-      { internalType: "string[]", name: "answers", type: "string[]" },
-      { internalType: "string", name: "seedPhrase", type: "string" },
-    ],
-    name: "withdrawAndDecipher",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  { inputs: [], name: "withdrawAndForget", outputs: [], stateMutability: "nonpayable", type: "function" },
-  {
-    inputs: [
-      { internalType: "address", name: "", type: "address" },
-      { internalType: "uint256", name: "", type: "uint256" },
-      { internalType: "uint256", name: "", type: "uint256" },
-    ],
-    name: "workerToProblemAnswers",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-];
+const CONTRACT_ABI = [ { "inputs": [ { "internalType": "uint256", "name": "_problemFee", "type": "uint256" }, { "internalType": "uint256", "name": "_problemStake", "type": "uint256" }, { "internalType": "bool", "name": "_useVerification", "type": "bool" }, { "internalType": "contract IWorldID", "name": "_worldId", "type": "address" }, { "internalType": "string", "name": "_appId", "type": "string" }, { "internalType": "string", "name": "_actionId", "type": "string" } ], "stateMutability": "nonpayable", "type": "constructor" }, { "inputs": [], "name": "InvalidNullifier", "type": "error" }, { "anonymous": false, "inputs": [ { "indexed": false, "internalType": "address", "name": "a", "type": "address" } ], "name": "Console", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" } ], "name": "OwnershipTransferred", "type": "event" }, { "inputs": [ { "internalType": "string", "name": "title", "type": "string" }, { "internalType": "string", "name": "description", "type": "string" }, { "internalType": "string[]", "name": "urlToImgs", "type": "string[]" }, { "internalType": "string[]", "name": "asnwers", "type": "string[]" }, { "internalType": "uint256", "name": "workersMax", "type": "uint256" }, { "internalType": "uint256", "name": "taskPriceWei", "type": "uint256" }, { "internalType": "uint256", "name": "answersMax", "type": "uint256" } ], "name": "addProblem", "outputs": [], "stateMutability": "payable", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "problemId", "type": "uint256" } ], "name": "getProblem", "outputs": [ { "components": [ { "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "string", "name": "title", "type": "string" }, { "internalType": "string", "name": "description", "type": "string" }, { "internalType": "string[]", "name": "urlToTask", "type": "string[]" }, { "internalType": "string[]", "name": "asnwers", "type": "string[]" }, { "internalType": "uint256", "name": "workersMax", "type": "uint256" }, { "internalType": "uint256", "name": "taskPriceWei", "type": "uint256" }, { "internalType": "uint256", "name": "answersMax", "type": "uint256" } ], "internalType": "struct ZkTurkContract.Problem", "name": "", "type": "tuple" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "getProblems", "outputs": [ { "components": [ { "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "string", "name": "title", "type": "string" }, { "internalType": "string", "name": "description", "type": "string" }, { "internalType": "string[]", "name": "urlToTask", "type": "string[]" }, { "internalType": "string[]", "name": "asnwers", "type": "string[]" }, { "internalType": "uint256", "name": "workersMax", "type": "uint256" }, { "internalType": "uint256", "name": "taskPriceWei", "type": "uint256" }, { "internalType": "uint256", "name": "answersMax", "type": "uint256" } ], "internalType": "struct ZkTurkContract.Problem[]", "name": "", "type": "tuple[]" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "string", "name": "answer", "type": "string" }, { "internalType": "uint256", "name": "problemId", "type": "uint256" } ], "name": "isAnswerAllowed", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "signer", "type": "address" }, { "internalType": "string", "name": "seedPhrase", "type": "string" }, { "internalType": "bytes", "name": "signature", "type": "bytes" } ], "name": "isValidSignature", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "problemId", "type": "uint256" }, { "internalType": "address", "name": "signal", "type": "address" }, { "internalType": "uint256", "name": "root", "type": "uint256" }, { "internalType": "uint256", "name": "nullifierHash", "type": "uint256" }, { "internalType": "uint256[8]", "name": "proof", "type": "uint256[8]" } ], "name": "joinProblem", "outputs": [], "stateMutability": "payable", "type": "function" }, { "inputs": [], "name": "owner", "outputs": [ { "internalType": "address", "name": "", "type": "address" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "problemFee", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "problemStake", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "problemId", "type": "uint256" }, { "internalType": "uint256", "name": "", "type": "uint256" } ], "name": "problemToAnswers", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "name": "problems", "outputs": [ { "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "string", "name": "title", "type": "string" }, { "internalType": "string", "name": "description", "type": "string" }, { "internalType": "uint256", "name": "workersMax", "type": "uint256" }, { "internalType": "uint256", "name": "taskPriceWei", "type": "uint256" }, { "internalType": "uint256", "name": "answersMax", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "bool", "name": "_state", "type": "bool" } ], "name": "setUseVerification", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "problemId", "type": "uint256" }, { "internalType": "uint256", "name": "taskId", "type": "uint256" }, { "internalType": "bytes", "name": "cipheredAnswer", "type": "bytes" } ], "name": "solveTask", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "name": "taskAnswers", "outputs": [ { "internalType": "uint256", "name": "problemId", "type": "uint256" }, { "internalType": "uint256", "name": "taskId", "type": "uint256" }, { "internalType": "address", "name": "worker", "type": "address" }, { "internalType": "bytes", "name": "cipheredAnswer", "type": "bytes" }, { "internalType": "string", "name": "answer", "type": "string" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "signer", "type": "address" }, { "internalType": "string", "name": "seed", "type": "string" }, { "internalType": "bytes", "name": "signature", "type": "bytes" } ], "name": "test", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "newOwner", "type": "address" } ], "name": "transferOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "useVerification", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "worker", "type": "address" }, { "internalType": "uint256", "name": "problemId", "type": "uint256" }, { "internalType": "uint256[]", "name": "taskIds", "type": "uint256[]" }, { "internalType": "string[]", "name": "answers", "type": "string[]" }, { "internalType": "string", "name": "seedPhrase", "type": "string" } ], "name": "withdrawAndDecipher", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "withdrawAndForget", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "", "type": "address" } ], "name": "workerToProblem", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "", "type": "address" }, { "internalType": "uint256", "name": "", "type": "uint256" }, { "internalType": "uint256", "name": "", "type": "uint256" } ], "name": "workerToProblemAnswers", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" } ]
+
+//@ts-nocheck
+export async function getWeb3Accounts(web3, userAddress=null) {
+  let addrs = await web3.eth.getAccounts();
+  if (userAddress) {
+      addrs = addrs.filter(obj => {
+          return obj.toLowerCase() === userAddress.toLowerCase()
+      })
+  }
+  return addrs
+}
 
 class ContractABC {
   constructor(web3, address = "0xD9245acA14c7E1985e8E16CB987Cd11C7b485c53") {
@@ -312,14 +100,28 @@ class TaskModel {
   }
 }
 
+class TaskOptionModel {
+    constructor(id, url) {
+        this.id = id; // uint
+        this.url = url; // string
+    }
+}
+
 const DEFAULT_SEED = "defaultSeed";
 
 export class TurkContractClient extends ContractABC {
   _parseArrayToProblemModel(arrayToParse) {
-
     const data = [];
     for (let i = 1; i < arrayToParse.length; i++) {
       data.push(new ProblemModel(i,...arrayToParse[i]));
+    }
+    return data;
+  }
+
+  _parseArrayToModel(arrayToParse, model) {
+    const data = [];
+    for (let i = 0; i < arrayToParse.length; i++) {
+      data.push(new model(i,arrayToParse[i]));
     }
     return data;
   }
@@ -378,11 +180,11 @@ export class TurkContractClient extends ContractABC {
   // uint256 root,
   // uint256 nullifierHash,
   // uint256[8] calldata proof
-  async startProblem(problemId, signal, root, nullifierHash, proof) {
+  async startProblem(problemId, signal="", root = 123, nullifierHash = 456, proof = [1,2,3,4,5,6,7,8]) {
     const fee = await this._getStakeValue();
     let requestConfig = {
       method: "joinProblem",
-      args: [problemId, signal, root, nullifierHash, proof],
+      args: [problemId, this.address, root, nullifierHash, proof], // TODO
       value: fee,
     };
     return await this._callMethod(requestConfig, "send");
@@ -435,17 +237,42 @@ export class TurkContractClient extends ContractABC {
     // console.log('workerToProblemAnswers', workerToProblemAnswers.toString())
   }
 
+  // Get all tasks for the problem, those are not answered yet.
+    // Returns string[]
+  async getAllTasks(problemId) {
+      const problem = await this.getProblem(problemId)
+      // TODO: filter for solved.
+      return this._parseArrayToModel(problem.urlToTask, TaskOptionModel)
+  }
+
   // Get next task to solve in the problem.
   async getNextTask(problemId) {
-    const tasks = await this.getProblem(problemId);
-    if (!this.kostil) {
-      this.kostil = 0;
+    this.kostil = this.kostil || 0
+    const allTasks = await this.getAllTasks(problemId)
+    console.log('this.kostil', this.kostil)
+    if (this.kostil == allTasks.length) {
+      return
     }
-    this.kostil += 1;
-    if (this.kostil === tasks.length) {
-      return null;
+    const res = allTasks[this.kostil]
+    this.kostil += 1
+    return res
+
+  }
+
+  async getJoinedProblem() {
+    const [myAddress] = await getWeb3Accounts(this.web3);
+    console.log('myAddress', myAddress)
+    let requestConfig = {
+      method: "workerToProblem",
+      args: [myAddress],
+      value: 0,
+    };
+    const res = await this._callMethod(requestConfig, "call")
+    if (!res) {
+      return
     }
-    return tasks[this.kostil];
+    return Number(res)
+
   }
 
   // TODO: not implemented.

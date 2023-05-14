@@ -6,8 +6,8 @@
         <h4>All my problems</h4>
 
         <div class="tasks-wrapper">
-          <div *ngFor="let task of tasks">
-            <app-task-card [disableButton]="true"></app-task-card>
+          <div *ngFor="let problem of problems">
+            <app-task-card [task]="problem"></app-task-card>
           </div>
         </div>
       </div>

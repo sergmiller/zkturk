@@ -25,12 +25,17 @@ label {
   display: flex;
 }
 
+.counter {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
 
 .sub-task {
 
-  &:not(:last-child) {
+  // &:not(:last-child) {
     margin-bottom: 1em;
-  }
+  // }
 
   img {
     max-height: 250px;

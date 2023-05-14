@@ -12,11 +12,14 @@ export class MetamaskStateService {
 
   public avalibleProblems: ProblemModel[] = [];
 
+  public myProblems: ProblemModel[] = [];
+
   constructor() {
     makeObservable<MetamaskStateService>(this, {
       accounts: observable,
       balance: observable,
       avalibleProblems: observable.shallow,
+      myProblems: observable.shallow,
       resetState: action,
     });
   }
@@ -26,5 +29,6 @@ export class MetamaskStateService {
     this.balance = "-.--";
     this.chainId = "";
     this.avalibleProblems = [];
+    this.myProblems = [];
   }
 }

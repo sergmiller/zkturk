@@ -6,14 +6,14 @@
         <h4>Available problems</h4>
 
         <div class="tasks-wrapper">
-          <div *ngFor="let task of tasks">
-            <app-task-card [task]="task"></app-task-card>
+          <div *ngFor="let problem of problems">
+            <app-task-card [task]="problem"></app-task-card>
           </div>
         </div>
       </div>
 
       <div class="opened-task" *ngIf="openedTask">
-        <app-opened-task [task]="openedTask"></app-opened-task>
+        <app-opened-task [problem]="openedTask"></app-opened-task>
       </div>
     </div>
   </div>

@@ -1,17 +1,7 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { remove } from "lodash";
-
-  interface Problem {
-    title: string;
-    priceForOne: number;
-    overlap: string
-    description: string;
-    images: string[];
-    variants: string[];
-  }
-
-
-
+import { Problem } from "../../models/models";
+import { MetamaskProviderService } from "../../services/metamask-provider.service";
 
 @Component({
   selector: "app-new-task-layout",
@@ -31,18 +21,13 @@ export class NewTaskLayoutComponent {
 
   public description: string = "";
 
-
-
-
-
-
-
-
-  uploadedFiles: any[] = [];
+  // uploadedFiles: any[] = [];
 
   public images: string[] = [];
 
   public variants: string[] = [];
+
+  constructor(private provider: MetamaskProviderService) {}
 
   pushImage() {
     if (this.imageInput) {
@@ -70,6 +55,32 @@ export class NewTaskLayoutComponent {
     remove(this.variants, (v) => v === variant);
   }
 
+  public sendProblem() {
+    const problem: Problem = {
+      title: this.title,
+      priceForOne: Number(this.priceForOne),
+      overlap: this.overlap,
+      description: this.description,
+      images: this.images,
+      variants: this.variants,
+    };
+    console.log("created problem from client: ", problem);
+
+    this.provider.getTurkContraksClient?.createProblem(
+      problem.title,
+      problem.description,
+      problem.images,
+      problem.variants,
+      problem.overlap,
+      problem.priceForOne,
+      problem.variants.length,
+    );
+  }
+
+  private parseToEth(value: any) {
+    this.provider.getTurkContraksClient?.parseToEth(value);
+  }
+
   // onSelect(event: any) {
   //   for (const file of event.files) {
   //     if (!this.uploadedFiles.some((f) => f.name === file.name)) {
@@ -86,19 +97,4 @@ export class NewTaskLayoutComponent {
   // onRemove(event: any) {
   //   remove(this.uploadedFiles, (f) => f.name === event.file.name);
   // }
-
-
-
-  public sendProblem() {
-
-
-    // const problem: Problem = {
-    //   title: "title",
-    // }
-
-
-
-
-
-  }
 }

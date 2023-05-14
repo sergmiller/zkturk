@@ -6,31 +6,45 @@
   </div>
 
   <div class="task-header">
-    <h5>Task name</h5>
-    <div class="price">0.01 for task</div>
+    <h5>{{ innerProblem?.title }}</h5>
+    <div class="price">{{ innerProblem?.priceForOne }} for task</div>
   </div>
 
   <label>description</label>
   <p>
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora, modi consequuntur? Molestiae magni doloremque ipsa beatae sequi pariatur
-    perferendis temporibus nulla, accusantium, in labore suscipit animi quam corporis libero repudiandae.
+    {{ innerProblem?.description }}
   </p>
 
-  <div class="sub-task border-round border-1 surface-border p-3" *ngFor="let subTask of sutTasks">
-    <img [src]="subTask.image" alt="" />
+  <div class="counter">
+    <label>{{ currentTaskIndex }}</label>
+  </div>
+  <div *ngIf="currentTask">
+    <div class="sub-task border-round border-1 surface-border p-3">
+      <img [src]="currentTask.image" alt="" />
 
-    <!-- <div class="variants"> -->
-    <div class="flex flex-wrap gap-3">
-      <div class="flex align-items-center" *ngFor="let variant of variants">
-        <p-radioButton [name]="variant" [value]="variant" [(ngModel)]="subTask.selectedVariand" [inputId]="variant"></p-radioButton>
-        <label [for]="variant" class="ml-2">{{ variant }}</label>
+      <div class="flex flex-wrap gap-3">
+        <div class="flex align-items-center" *ngFor="let variant of variants">
+          <button type="button" pButton pRipple [label]="variant" (click)="selectVariant(currentTask, variant)"></button>
+        </div>
       </div>
     </div>
-    <!-- </div> -->
   </div>
 
   <div class="task-footer">
     <div></div>
-    <button (click)="completeTask()" class="submit-button" pButton label="Complete and withdraw"></button>
+    <button (click)="completeProblem()" class="submit-button" pButton label="Complete and withdraw"></button>
   </div>
 </div>
+
+<!-- <div class="sub-task border-round border-1 surface-border p-3" *ngFor="let task of tasks">
+  <img [src]="task.image" alt="" />
+
+  <div class="flex flex-wrap gap-3">
+    <div class="flex align-items-center" *ngFor="let variant of variants">
+
+      <button type="button" pButton pRipple [label]="variant" (click)="selectVariant(task, variant)"></button>
+      <p-radioButton [name]="variant" [value]="variant" [(ngModel)]="task.selectedVariand" [inputId]="variant"></p-radioButton>
+      <label [for]="variant" class="ml-2">{{ variant }}</label>
+    </div>
+  </div>
+</div> -->

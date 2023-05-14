@@ -5,7 +5,7 @@
       <div class="p-fluid p-formgrid grid">
         <div class="field field-margin-0 col-12 md:col-4">
           <label htmlFor="Name">Name</label>
-          <input pInputText id="Name" type="text"  [(ngModel)]="title"/>
+          <input pInputText id="Name" type="text" [(ngModel)]="title" />
         </div>
         <div class="field field-margin-0 col-12 md:col-4">
           <label htmlFor="PriceForOne">PriceForOne</label>
@@ -13,11 +13,11 @@
         </div>
         <div class="field field-margin-0 col-12 md:col-4">
           <label htmlFor="Overshoto">Overlap</label>
-          <input pInputText id="Overshoto" type="text" />
+          <input pInputText id="Overshoto" type="text" [(ngModel)]="overlap" />
         </div>
         <div class="field field-margin-0 col-12">
           <label htmlFor="address">Description</label>
-          <textarea rows="5" cols="30" placeholder="Your Message" pInputTextarea></textarea>
+          <textarea rows="5" cols="30" placeholder="Your Message" pInputTextarea [(ngModel)]="description"></textarea>
         </div>
 
         <!-- <div class="field field-margin-0 col-12">
@@ -87,10 +87,10 @@
 
         <div class="field col-12 md:col-12 cost">
           <div class="text-900 font-medium text-xl">Total cost:</div>
-          <div class="text-900 font-medium text-xl">$2.100</div>
+          <div class="text-900 font-medium text-xl">0.00</div>
         </div>
       </div>
-      <button class="submit-button" pButton label="Pay and create task"></button>
+      <button class="submit-button" pButton label="Pay and create task" (click)="sendProblem()"></button>
     </div>
   </div>
 </div>
