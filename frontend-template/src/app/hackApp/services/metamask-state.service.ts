@@ -14,12 +14,15 @@ export class MetamaskStateService {
 
   public myProblems: ProblemModel[] = [];
 
+  public joinedProblemId: number | undefined = undefined;
+
   constructor() {
     makeObservable<MetamaskStateService>(this, {
       accounts: observable,
       balance: observable,
       avalibleProblems: observable.shallow,
       myProblems: observable.shallow,
+      joinedProblemId: observable,
       resetState: action,
     });
   }

@@ -21,10 +21,10 @@ import { MyLandingComponent } from "./hackApp/layouts/my-landing/my-landing.comp
             { path: "new-task", component: NewTaskLayoutComponent },
             { path: "all-my-tasks", component: AllMyTasksLayoutComponent },
 
-            {
-              path: "uikit",
-              loadChildren: () => import("./demo/components/uikit/uikit.module").then((m) => m.UIkitModule),
-            },
+            // {
+            //   path: "uikit",
+            //   loadChildren: () => import("./demo/components/uikit/uikit.module").then((m) => m.UIkitModule),
+            // },
 
             // {
             //   path: "dashboard",

@@ -18,6 +18,11 @@ export class OpenedTaskComponent implements OnInit {
 
   public taskCounter: number = 0;
 
+  private resultAnswers: {
+    taskId: number;
+    answer: string;
+  }[] = [];
+
   constructor(private eventService: MyEventService, private provider: MetamaskProviderService) {}
 
   ngOnInit(): void {
@@ -30,11 +35,10 @@ export class OpenedTaskComponent implements OnInit {
 
   public get currentTaskIndex() {
     if (this.taskCounter < this.tasks.length) {
-      return (this.taskCounter + 1) + " / " + this.tasks.length;
+      return this.taskCounter + 1 + " / " + this.tasks.length;
     } else {
       return this.taskCounter + " / " + this.tasks.length;
     }
-
   }
 
   closeTask() {
@@ -75,20 +79,31 @@ export class OpenedTaskComponent implements OnInit {
   public async selectVariant(task: ProblemTaskLite, variant: string) {
     await this.provider.getTurkContraksClient?.solveTask(this.innerProblem?.id, task.taskId, variant);
 
+    this.resultAnswers.push({
+      taskId: task.taskId,
+      answer: variant,
+    });
     if (this.taskCounter < this.tasks.length) {
       this.taskCounter++;
       this.currentTask = this.tasks[this.taskCounter];
     } else {
-      this.taskCounter = 0
+      this.taskCounter = 0;
       this.currentTask = undefined;
     }
   }
 
   public async completeProblem() {
-    // this.provider.getTurkContraksClient?.withdraw(this.problem?.id)
-    await this.provider.getTurkContraksClient?.withdrawAndForget()
+    const taskIds = this.resultAnswers.map((answer) => answer.taskId)
+    const taskAnswers = this.resultAnswers.map((answer) => answer.answer)
+    console.log("this.problem?.id: ", this.innerProblem?.id, " taskIds: ", taskIds, " taskAnswers: ", taskAnswers)
+
+    await this.provider.getTurkContraksClient?.withdraw(
+      this.innerProblem?.id,
+      [],
+      []
+    );
+    // await this.provider.getTurkContraksClient?.withdrawAndForget()
 
     this.eventService.startTaskEvent.next(undefined);
-
   }
 }

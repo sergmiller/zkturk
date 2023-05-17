@@ -6,8 +6,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { InputTextModule } from "primeng/inputtext";
 import { SidebarModule } from "primeng/sidebar";
 import { BadgeModule } from "primeng/badge";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { InputSwitchModule } from "primeng/inputswitch";
+// import { RadioButtonModule } from "primeng/radiobutton";
+// import { InputSwitchModule } from "primeng/inputswitch";
 import { RippleModule } from "primeng/ripple";
 import { AppMenuComponent } from "./app.menu.component";
 import { AppMenuitemComponent } from "./app.menuitem.component";
@@ -27,18 +27,18 @@ import { ToggleButtonModule } from "primeng/togglebutton";
 import { CommonModule } from "@angular/common";
 import { FormLayoutDemoRoutingModule } from "../demo/components/uikit/formlayout/formlayoutdemo-routing.module";
 import { AutoCompleteModule } from "primeng/autocomplete";
-import { CalendarModule } from "primeng/calendar";
-import { ChipsModule } from "primeng/chips";
-import { DropdownModule } from "primeng/dropdown";
-import { InputMaskModule } from "primeng/inputmask";
-import { InputNumberModule } from "primeng/inputnumber";
-import { CascadeSelectModule } from "primeng/cascadeselect";
-import { MultiSelectModule } from "primeng/multiselect";
+// import { CalendarModule } from "primeng/calendar";
+// import { ChipsModule } from "primeng/chips";
+// import { DropdownModule } from "primeng/dropdown";
+// import { InputMaskModule } from "primeng/inputmask";
+// import { InputNumberModule } from "primeng/inputnumber";
+// import { CascadeSelectModule } from "primeng/cascadeselect";
+// import { MultiSelectModule } from "primeng/multiselect";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { NewTaskLayoutComponent } from "../hackApp/layouts/new-task-layout/new-task-layout.component";
 import { AllMyTasksLayoutComponent } from "../hackApp/layouts/all-my-tasks-layout/all-my-tasks-layout.component";
 import { AvailableTasksLayoutComponent } from "../hackApp/layouts/available-tasks-layout/available-tasks-layout.component";
-import { FileUploadModule } from "primeng/fileupload";
+// import { FileUploadModule } from "primeng/fileupload";
 import { MyLandingComponent } from "../hackApp/layouts/my-landing/my-landing.component";
 import { TaskCardComponent } from "../hackApp/components/task-card/task-card.component";
 import { ReactWrapper } from "../hackApp/react/react-wrapper";
@@ -72,9 +72,8 @@ import { OpenedTaskComponent } from "../hackApp/components/opened-task/opened-ta
     InputTextModule,
     SidebarModule,
     BadgeModule,
-    RadioButtonModule,
-    InputSwitchModule,
-    RippleModule,
+    // RadioButtonModule,
+    // InputSwitchModule,
     RouterModule,
     AppConfigModule,
 
@@ -85,32 +84,32 @@ import { OpenedTaskComponent } from "../hackApp/components/opened-task/opened-ta
     ToggleButtonModule,
 
     CommonModule,
-    FormLayoutDemoRoutingModule,
+    // FormLayoutDemoRoutingModule,
     AutoCompleteModule,
-    CalendarModule,
-    ChipsModule,
-    DropdownModule,
-    InputMaskModule,
-    InputNumberModule,
-    CascadeSelectModule,
-    MultiSelectModule,
+    // CalendarModule,
+    // ChipsModule,
+    // DropdownModule,
+    // InputMaskModule,
+    // InputNumberModule,
+    // CascadeSelectModule,
+    // MultiSelectModule,
     InputTextareaModule,
-    FileUploadModule,
+    // FileUploadModule,
   ],
   exports: [
     // AppLayoutComponent,
-    AppMenuitemComponent,
+    // AppMenuitemComponent,
     // AppTopBarComponent,
-    AppFooterComponent,
-    AppMenuComponent,
-    AppSidebarComponent,
-    MyTopBarComponent,
+    // AppFooterComponent,
+    // AppMenuComponent,
+    // AppSidebarComponent,
+    // MyTopBarComponent,
     MyAppLayoutComponent,
-    MySidebarComponent,
-    MyMenuComponent,
-    MyLandingComponent,
-    TaskCardComponent,
-    OpenedTaskComponent,
+    // MySidebarComponent,
+    // MyMenuComponent,
+    // MyLandingComponent,
+    // TaskCardComponent,
+    // OpenedTaskComponent,
   ],
 })
 export class AppLayoutModule {}

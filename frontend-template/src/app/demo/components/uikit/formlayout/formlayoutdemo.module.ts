@@ -16,20 +16,20 @@ import { InputTextModule } from "primeng/inputtext";
 
 @NgModule({
 	imports: [
-		CommonModule,
+		// CommonModule,
 		FormsModule,
-		FormLayoutDemoRoutingModule,
-		AutoCompleteModule,
-		CalendarModule,
-		ChipsModule,
+		// FormLayoutDemoRoutingModule,
+		// AutoCompleteModule,
+		// CalendarModule,
+		// ChipsModule,
 		DropdownModule,
-		InputMaskModule,
-		InputNumberModule,
-		CascadeSelectModule,
-		MultiSelectModule,
-		InputTextareaModule,
-		InputTextModule
+		// InputMaskModule,
+		// InputNumberModule,
+		// CascadeSelectModule,
+		// MultiSelectModule,
+		// InputTextareaModule,
+		// InputTextModule
 	],
-	declarations: [FormLayoutDemoComponent]
+	// declarations: [FormLayoutDemoComponent]
 })
 export class FormLayoutDemoModule { }

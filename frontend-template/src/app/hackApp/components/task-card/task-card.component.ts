@@ -3,6 +3,7 @@ import { Interface } from "readline";
 import { MyEventService } from "../../services/event.service";
 import { Problem } from "../../models/models";
 import { MetamaskProviderService } from "../../services/metamask-provider.service";
+import { MetamaskStateService } from "../../services/metamask-state.service";
 
 @Component({
   selector: "app-task-card",
@@ -19,12 +20,13 @@ export class TaskCardComponent {
 
   public innerTask: Problem | undefined;
 
-  constructor(private eventService: MyEventService, private provider:  MetamaskProviderService) {}
+  constructor(private eventService: MyEventService, private provider: MetamaskProviderService, private stateService: MetamaskStateService) {}
 
   public async startTask() {
-    console.log("startTask in task: ", this.innerTask);
-    await this.provider.getTurkContraksClient?.withdrawAndForget()
-    await this.provider.getTurkContraksClient?.startProblem(this.innerTask?.id)
+    if (this.stateService.joinedProblemId) {
+      await this.provider.getTurkContraksClient?.withdrawAndForget();
+    }
+    await this.provider.getTurkContraksClient?.startProblem(this.innerTask?.id);
 
     this.eventService.startTaskEvent.next(this.innerTask);
   }
