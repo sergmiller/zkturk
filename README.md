@@ -1,7 +1,6 @@
 # zkturk
 
-Live demo (if link doesn't work please ask for another) 
-https://4a50-95-95-67-159.ngrok-free.app/
+Live demo https://sergmiller.github.io/zkturk/
 
 ZkMechanicalTurk project for ETH LISBON
 
