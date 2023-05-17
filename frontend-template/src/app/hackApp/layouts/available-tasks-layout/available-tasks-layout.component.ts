@@ -31,10 +31,31 @@ export class AvailableTasksLayoutComponent {
         this.problems = MetamaskUtils.toClientProblems(avalibleProblems);
       },
     );
+
+    if (this.stateService.joinedProblemId) {
+      this.updateOpenedTask(this.stateService.joinedProblemId);
+    }
+    reaction(
+      () => this.stateService.joinedProblemId,
+      (joinedProblemId) => {
+        console.log("%cjoinedProblemId reaction: ", "color: red", joinedProblemId);
+        this.updateOpenedTask(joinedProblemId);
+      },
+    );
   }
 
   private openTask(task: Problem) {
     console.log("%copenTask: ", "color: red", task);
     this.openedTask = task;
+  }
+
+  private updateOpenedTask(joinedProblemId: number | undefined) {
+    if (joinedProblemId) {
+      console.log("joinedProblemId: ", joinedProblemId);
+      console.log("this.stateService.avalibleProblems: ", this.stateService.avalibleProblems);
+      const joinedProblem = this.stateService.avalibleProblems.find((problem) => (problem as any).id === joinedProblemId);
+      console.log("joinedProblem: ", joinedProblem);
+      this.openedTask = joinedProblem ? MetamaskUtils.toClientProblem(joinedProblem) : undefined;
+    }
   }
 }

@@ -17,10 +17,10 @@ interface MetaMaskEthereumProvider {
 }
 
 const networkIdToContractAddress: any = {
-    137: "0xD9245acA14c7E1985e8E16CB987Cd11C7b485c53",
-    80001: "0x21CDd626D170E49CC329A3C82b247b36ACC33033", //mumbai
-    10200: "0x5a1b840CB796c697C1185dB9F43432C08Ba7B6AA",
-}
+  137: "0xD9245acA14c7E1985e8E16CB987Cd11C7b485c53",
+  80001: "0x21CDd626D170E49CC329A3C82b247b36ACC33033", //mumbai
+  10200: "0x5a1b840CB796c697C1185dB9F43432C08Ba7B6AA",
+};
 
 @Injectable()
 export class MetamaskProviderService {
@@ -64,9 +64,9 @@ export class MetamaskProviderService {
       this.web3 = new Web3(provider as any);
 
       const networkId = await this.web3.eth.net.getId();
-      console.log("Detected network:", networkId)
+      console.log("Detected network:", networkId);
       const contractAddress = networkIdToContractAddress[networkId];
-      console.log("contractAddress is", contractAddress)
+      console.log("contractAddress is", contractAddress);
       //  TODO: if not supported network.
       this.turkContraksClient = new TurkContractClient(this.web3, contractAddress);
 
@@ -139,6 +139,12 @@ export class MetamaskProviderService {
 
       runInAction(() => {
         this.metamaskStateService.myProblems = myProblems;
+      });
+
+      const problemId = await this.turkContraksClient.getJoinedProblem();
+      console.log("%cmyProblems: ", "color: green", problemId);
+      runInAction(() => {
+        this.metamaskStateService.joinedProblemId = problemId;
       });
     }
   }
