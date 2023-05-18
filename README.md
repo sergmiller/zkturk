@@ -1,6 +1,6 @@
 # zkturk
 
-Live demo https://sergmiller.github.io/zkturk/
+Live demo https://zkturk.why-nft.com/
 
 ZkMechanicalTurk project for ETH LISBON
 
