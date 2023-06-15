@@ -28,7 +28,7 @@ export class MetamaskProviderService {
 
   private anyMetamaskProvider: any | undefined;
 
-  private web3: any | undefined;
+  private web3: Web3 | undefined;
 
   private turkContraksClient: TurkContractClient | undefined;
 
@@ -78,7 +78,7 @@ export class MetamaskProviderService {
       // console.log("refreshedAccounts: ", accounts);
       this.refreshAccounts(accounts);
       this.metamaskProvider.on("chainChanged", this.handleChainChanged);
-      this.anyMetamaskProvider.on("accountsChanged", this.refreshAccounts); /* New */
+      this.metamaskProvider.on("accountsChanged", this.refreshAccounts); /* New */
     } else {
       console.error("%cPlease install MetaMask!", "color: blue");
     }
