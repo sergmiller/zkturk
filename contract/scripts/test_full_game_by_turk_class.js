@@ -29,7 +29,7 @@ describe("FULL GAME ON CONTRACT CLIENT", function () {
         console.log('Start')
         const Storage = await ethers.getContractFactory("ZkTurkContract");
         const WorldID = await ethers.getContractFactory("DummyWorldID");
-        worldIdContract = await WorldID.deploy()
+        const worldIdContract = await WorldID.deploy()
         worldIdContract.deployed();
         const contract = await Storage.deploy(1, 1, false, "0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A", "dummy_app_id", "dummy_action");
         contract.deployed();
