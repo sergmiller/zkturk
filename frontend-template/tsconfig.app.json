@@ -2,7 +2,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": true,
     "outDir": "./out-tsc/app",
     "types": []
   },
@@ -12,5 +11,5 @@
   ],
   "include": [
     "src/**/*.d.ts"
-  ]
+  ],
 }

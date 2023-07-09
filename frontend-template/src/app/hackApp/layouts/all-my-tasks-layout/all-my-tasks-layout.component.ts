@@ -1,19 +1,22 @@
-import { Component } from "@angular/core";
-import { MyEventService } from "../../services/event.service";
-import { Problem } from "../../models/models";
-import { MetamaskStateService } from "../../services/metamask-state.service";
-import { MetamaskUtils } from "../../services/metamask-utils";
-import { reaction } from "mobx";
+import { Component } from '@angular/core';
+import { MyEventService } from '../../services/event.service';
+import { Problem } from '../../models/models';
+import { MetamaskStateService } from '../../services/metamask-state.service';
+import { MetamaskUtils } from '../../services/metamask-utils';
+import { reaction } from 'mobx';
 
 @Component({
-  selector: "app-all-my-tasks-layout",
-  templateUrl: "./all-my-tasks-layout.component.html",
-  styleUrls: ["./all-my-tasks-layout.component.scss"],
+  selector: 'app-all-my-tasks-layout',
+  templateUrl: './all-my-tasks-layout.component.html',
+  styleUrls: ['./all-my-tasks-layout.component.scss'],
 })
 export class AllMyTasksLayoutComponent {
   public problems: Problem[] = [];
 
-  constructor(private eventService: MyEventService, private stateService: MetamaskStateService) {
+  constructor(
+    private eventService: MyEventService,
+    private stateService: MetamaskStateService,
+  ) {
     if (this.stateService.myProblems?.length) {
       this.problems = MetamaskUtils.toClientProblems(this.stateService.myProblems);
     }
@@ -21,7 +24,7 @@ export class AllMyTasksLayoutComponent {
     reaction(
       () => this.stateService.myProblems,
       (myProblems) => {
-        console.log("%cavalibleProblems reaction: ", "color: red", myProblems);
+        console.log('%cavalibleProblems reaction: ', 'color: red', myProblems);
         this.problems = MetamaskUtils.toClientProblems(myProblems);
       },
     );

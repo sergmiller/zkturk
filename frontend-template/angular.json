@@ -2,8 +2,9 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "defaultProject": "zk-turk-frontend",
   "projects": {
-    "sakai-ng": {
+    "zk-turk-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +21,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/sakai-ng",
+            "outputPath": "dist/zk-turk-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -36,6 +37,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "zkturk.why-nft.com",
               "optimization": true,
               "sourceMap": false,
               "namedChunks": false,
@@ -78,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "sakai-ng:build:production"
+              "browserTarget": "zk-turk-frontend:build:production"
             },
             "development": {
-              "browserTarget": "sakai-ng:build:development"
+              "browserTarget": "zk-turk-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -89,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sakai-ng:build"
+            "browserTarget": "zk-turk-frontend:build"
           }
         },
         "test": {
@@ -121,12 +123,5 @@
         }
       }
     }
-  },
-  "defaultProject": "sakai-ng",
-  "cli": {
-    "analytics": false,
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
   }
 }

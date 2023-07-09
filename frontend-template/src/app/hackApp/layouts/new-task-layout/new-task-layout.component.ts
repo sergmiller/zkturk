@@ -1,25 +1,25 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
-import { remove } from "lodash";
-import { Problem } from "../../models/models";
-import { MetamaskProviderService } from "../../services/metamask-provider.service";
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { remove } from 'lodash';
+import { Problem } from '../../models/models';
+import { MetamaskProviderService } from '../../services/metamask-provider.service';
 
 @Component({
-  selector: "app-new-task-layout",
-  templateUrl: "./new-task-layout.component.html",
-  styleUrls: ["./new-task-layout.component.scss"],
+  selector: 'app-new-task-layout',
+  templateUrl: './new-task-layout.component.html',
+  styleUrls: ['./new-task-layout.component.scss'],
 })
 export class NewTaskLayoutComponent {
-  @ViewChild("imageInput", { static: true }) imageInput: ElementRef<HTMLInputElement> | undefined;
+  @ViewChild('imageInput', { static: true }) imageInput: ElementRef<HTMLInputElement> | undefined;
 
-  @ViewChild("variantInput", { static: true }) variantInput: ElementRef<HTMLInputElement> | undefined;
+  @ViewChild('variantInput', { static: true }) variantInput: ElementRef<HTMLInputElement> | undefined;
 
-  public title: string = "";
+  public title: string = '';
 
-  public priceForOne: string = "";
+  public priceForOne: string = '';
 
-  public overlap: string = "";
+  public overlap: string = '';
 
-  public description: string = "";
+  public description: string = '';
 
   // uploadedFiles: any[] = [];
 
@@ -33,8 +33,8 @@ export class NewTaskLayoutComponent {
     if (this.imageInput) {
       const url = this.imageInput?.nativeElement.value;
       this.images.push(url);
-      this.imageInput.nativeElement.value = "";
-      console.log("pushImage", this.images);
+      this.imageInput.nativeElement.value = '';
+      console.log('pushImage', this.images);
     }
   }
 
@@ -46,8 +46,8 @@ export class NewTaskLayoutComponent {
     if (this.variantInput) {
       const variant = this.variantInput?.nativeElement.value;
       this.variants.push(variant);
-      this.variantInput.nativeElement.value = "";
-      console.log("pushVariant", this.variants);
+      this.variantInput.nativeElement.value = '';
+      console.log('pushVariant', this.variants);
     }
   }
 
@@ -64,7 +64,7 @@ export class NewTaskLayoutComponent {
       images: this.images,
       variants: this.variants,
     };
-    console.log("created problem from client: ", problem);
+    console.log('created problem from client: ', problem);
 
     this.provider.getTurkContraksClient?.createProblem(
       problem.title,

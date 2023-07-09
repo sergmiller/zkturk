@@ -3,21 +3,17 @@
   Component,
   ElementRef,
   EventEmitter,
-  Input,
   OnChanges,
   OnDestroy,
   Output,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
-
-
+import { CredentialType, IDKitWidget, ISuccessResult } from '@worldcoin/idkit';
 
 const containerElementName = 'customReactComponentContainer';
 
@@ -32,27 +28,27 @@ export class ReactWrapper implements OnChanges, OnDestroy, AfterViewInit {
   @Output() public componentClick = new EventEmitter<void>();
 
   constructor() {
-      this.handleDivClicked = this.handleDivClicked.bind(this);
+    this.handleDivClicked = this.handleDivClicked.bind(this);
   }
 
   public handleDivClicked() {
-      if (this.componentClick) {
-          this.componentClick.emit();
-          this.render();
-      }
+    if (this.componentClick) {
+      this.componentClick.emit();
+      this.render();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      this.render();
+    this.render();
   }
 
   ngAfterViewInit() {
-      this.render();
+    this.render();
   }
 
   ngOnDestroy() {
-      // ReactDOM.unmountComponentAtNode(this.containerRef.nativeElement);
-      // root.unmount();
+    // ReactDOM.unmountComponentAtNode(this.containerRef.nativeElement);
+    // root.unmount();
   }
 
   private render() {
@@ -61,59 +57,34 @@ export class ReactWrapper implements OnChanges, OnDestroy, AfterViewInit {
   }
 }
 
-
-
 function RApp() {
   React.useEffect(() => {
     console.log('rendered');
   });
 
-	const handleProof = (result: any) => {
-		return new Promise((resolve: (value?: any) => void) => {
-			setTimeout(() => resolve(), 3000);
-			// NOTE: Example of how to decline the verification request and show an error message to the user
-		});
-	};
+  const handleProof = (result: any) => {
+    return new Promise((resolve: (value?: any) => void) => {
+      setTimeout(() => resolve(), 3000);
+      // NOTE: Example of how to decline the verification request and show an error message to the user
+    });
+  };
 
-	const onSuccess = (result: any) => {
-		console.log("IS_RESULT", result);
-	};
+  const onSuccess = (result: any) => {
+    console.log('IS_RESULT', result);
+  };
 
-  //	const urlParams = new URLSearchParams(window.location.search);
-  //	const credential_types = (urlParams.get("credential_types")?.split(",") as CredentialType[]) ?? [
-  //		CredentialType.Orb,
-  //		CredentialType.Phone,
-  //	];
+  const action = 'my_action';
+  const app_id = 'app_27e786e19bc6472e4d4cd8256eaa2fc4';
 
-	const action = "my_action"
-	const app_id = "app_27e786e19bc6472e4d4cd8256eaa2fc4"
-
-	return (
-		<div
-			className="App"
-			// style={{
-			// 	minHeight: "100vh",
-			// 	display: "flex",
-			// 	justifyContent: "center",
-			// 	alignItems: "center",
-			// }}
-		>
-			<IDKitWidget
-				action={action}
-				signal="my_signal"
-				onSuccess={onSuccess}
-				handleVerify={handleProof}
-				app_id={app_id}
-        //				credential_types={credential_types}
-				// walletConnectProjectId="get_this_from_walletconnect_portal"
-			>
-				{({ open }: any) =>
-        <button
-        className="p-ripple p-element p-button-raised p-button-secondary connect-button p-button p-component"
-        onClick={open}
-      >World ID</button>
-        }
-			</IDKitWidget>
-		</div>
-	);
+  return (
+    <div className="App">
+      <IDKitWidget action={action} signal="my_signal" onSuccess={onSuccess} handleVerify={handleProof} app_id={app_id}>
+        {({ open }: any) => (
+          <button className="p-ripple p-element p-button-raised p-button-secondary connect-button p-button p-component" onClick={open}>
+            World ID
+          </button>
+        )}
+      </IDKitWidget>
+    </div>
+  );
 }

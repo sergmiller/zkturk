@@ -3,7 +3,7 @@
   font-style: normal;
   letter-spacing: 0em;
   text-align: left;
-  color: #353A3F;
+  color: #353a3f;
 
   h4,
   p,
@@ -12,7 +12,7 @@
     font-style: normal;
     letter-spacing: 0em;
     text-align: left;
-    color: #353A3F;
+    color: #353a3f;
   }
 }
 
@@ -35,8 +35,8 @@
   &.square::before {
     position: absolute;
     z-index: -1;
-    content: "";
-    background: #FAE696;
+    content: '';
+    background: #fae696;
     width: 108px;
     height: 108px;
   }
@@ -46,7 +46,6 @@
     top: -25px;
     border-radius: 100%;
   }
-
 
   &.square::before {
     left: 0px;
@@ -59,7 +58,6 @@
   font-size: 24px;
   font-weight: 600;
   line-height: 29px;
-
 }
 
 .bottom-text {
@@ -75,7 +73,6 @@
   font-weight: 600;
   line-height: 19px;
   letter-spacing: 0em;
-
 
   display: flex;
   align-items: center;
