@@ -1,6 +1,6 @@
 ﻿import { Injectable } from "@angular/core";
 import { observable, makeObservable, action } from "mobx";
-import { ProblemModel } from "./turk-contrakt-client/TurkContractClient";
+import {ZkTurk} from "./turk-contract-artifacts/typechain-types";
 
 @Injectable()
 export class MetamaskStateService {
@@ -10,9 +10,9 @@ export class MetamaskStateService {
 
   public chainId: string = "";
 
-  public avalibleProblems: ProblemModel[] = [];
+  public avalibleProblems: ZkTurk.ProblemStructOutput[] = [];
 
-  public myProblems: ProblemModel[] = [];
+  public myProblems: ZkTurk.ProblemStructOutput[] = [];
 
   public joinedProblemId: number | undefined = undefined;
 
