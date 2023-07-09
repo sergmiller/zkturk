@@ -152,7 +152,8 @@ export class MetamaskProviderService {
       const problemId = await this.turkContraksClient.getJoinedProblem();
       console.log("%cmyProblems: ", "color: green", problemId);
       runInAction(() => {
-        this.metamaskStateService.joinedProblemId = problemId;
+        // @ts-ignore
+          this.metamaskStateService.joinedProblemId = problemId;
       });
     }
   }
