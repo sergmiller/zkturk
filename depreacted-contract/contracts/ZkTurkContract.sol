@@ -59,7 +59,7 @@ contract ZkTurkContract is Ownable, Crypto {
 	/// @dev The World ID instance that will be used for verifying proofs
 	IWorldID internal immutable worldId;
 
-	/// @dev The contract's external nullifier hash
+	/// @dev The depreacted-contract's external nullifier hash
 	uint256 internal immutable externalNullifier;
 
 	/// @dev The World ID group ID (always 1)

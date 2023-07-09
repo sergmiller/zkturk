@@ -8,7 +8,7 @@ async function shouldThrow(promise) {
     catch (err) {
         return;
     }
-    throw Error("The contract did not throw.");
+    throw Error("The depreacted-contract did not throw.");
 
 }
 

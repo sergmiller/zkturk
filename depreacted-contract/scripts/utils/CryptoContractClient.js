@@ -1,7 +1,7 @@
 export class CryptoContractClient {
 
     constructor(web3, signer, contractAddress) {
-        // To prevent cross contract iteraction.
+        // To prevent cross depreacted-contract iteraction.
         this.contractAddress = contractAddress
         this.web3 = web3
         this.signer = signer
