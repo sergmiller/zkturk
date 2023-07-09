@@ -4,7 +4,10 @@ import { MetamaskStateService } from "./metamask-state.service";
 import { runInAction } from "mobx";
 import { MetamaskUtils } from "./metamask-utils";
 import Web3 from "web3";
-import { TurkContractClient } from "./turk-contrakt-client/TurkContractClient";
+import {ZkTurkClient} from "./turk-contract-artifacts/frontend-clients/ZkTurkClient";
+import {ethers} from "ethers";
+// @ts-ignore
+import ZkTurkArtifacts from "./turk-contract-artifacts/artifacts/contracts/ZkTurk.sol/ZkTurk.json";
 
 interface MetaMaskEthereumProvider {
   isMetaMask?: boolean;
@@ -17,9 +20,10 @@ interface MetaMaskEthereumProvider {
 }
 
 const networkIdToContractAddress: any = {
-  137: "0xD9245acA14c7E1985e8E16CB987Cd11C7b485c53",
-  80001: "0x21CDd626D170E49CC329A3C82b247b36ACC33033", //mumbai
-  10200: "0x5a1b840CB796c697C1185dB9F43432C08Ba7B6AA",
+  //   TODO: more networks.
+  // 137: "0xD9245acA14c7E1985e8E16CB987Cd11C7b485c53",
+  80001: "0xFa024FEcebE35A552C564E6eA2c38ecF52Be7a9f", //mumbai
+  // 10200: "0x5a1b840CB796c697C1185dB9F43432C08Ba7B6AA",
 };
 
 @Injectable()
@@ -30,7 +34,7 @@ export class MetamaskProviderService {
 
   private web3: any | undefined;
 
-  private turkContraksClient: TurkContractClient | undefined;
+  private turkContraksClient: ZkTurkClient | undefined;
 
   constructor(private metamaskStateService: MetamaskStateService) {
     console.log("MetamaskProviderService constructor!");
@@ -61,6 +65,10 @@ export class MetamaskProviderService {
     if (provider) {
       this.metamaskProvider = provider;
       this.anyMetamaskProvider = provider;
+      // TODO: does it works correctly?
+      // @ts-ignore
+        const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = ethersProvider.getSigner()
       this.web3 = new Web3(provider as any);
 
       const networkId = await this.web3.eth.net.getId();
@@ -68,7 +76,7 @@ export class MetamaskProviderService {
       const contractAddress = networkIdToContractAddress[networkId];
       console.log("contractAddress is", contractAddress);
       //  TODO: if not supported network.
-      this.turkContraksClient = new TurkContractClient(this.web3, contractAddress);
+      this.turkContraksClient = new ZkTurkClient(signer, ZkTurkArtifacts.abi, contractAddress);
 
       console.log("%cweb3", "color:blue", this.web3);
       console.log("%cturkContraksClient", "color:blue", this.turkContraksClient);
@@ -144,7 +152,8 @@ export class MetamaskProviderService {
       const problemId = await this.turkContraksClient.getJoinedProblem();
       console.log("%cmyProblems: ", "color: green", problemId);
       runInAction(() => {
-        this.metamaskStateService.joinedProblemId = problemId;
+        // @ts-ignore
+          this.metamaskStateService.joinedProblemId = problemId;
       });
     }
   }

@@ -26,7 +26,8 @@ export class TaskCardComponent {
     if (this.stateService.joinedProblemId) {
       await this.provider.getTurkContraksClient?.withdrawAndForget();
     }
-    await this.provider.getTurkContraksClient?.startProblem(this.innerTask?.id);
+    // @ts-ignore
+      await this.provider.getTurkContraksClient?.startProblem(this.innerTask?.id);
 
     this.eventService.startTaskEvent.next(this.innerTask);
   }

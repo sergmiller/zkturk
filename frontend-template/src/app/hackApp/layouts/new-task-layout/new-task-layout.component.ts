@@ -71,7 +71,7 @@ export class NewTaskLayoutComponent {
       problem.description,
       problem.images,
       problem.variants,
-      problem.overlap,
+      Number(problem.overlap),
       problem.priceForOne,
       problem.variants.length,
     );

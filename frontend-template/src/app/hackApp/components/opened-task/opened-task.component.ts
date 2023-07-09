@@ -68,7 +68,8 @@ export class OpenedTaskComponent implements OnInit {
 
   private async getTasks() {
     console.log("this.problem", this.innerProblem);
-    const serverTasks = await this.provider.getTurkContraksClient?.getAllTasks(this.innerProblem?.id);
+    // @ts-ignore
+      const serverTasks = await this.provider.getTurkContraksClient?.getAllTasks(this.innerProblem?.id);
     console.log("serverTasks: ", serverTasks);
     if (serverTasks) {
       this.tasks = serverTasks.map((task) => MetamaskUtils.toClientTask(task));
@@ -77,7 +78,8 @@ export class OpenedTaskComponent implements OnInit {
   }
 
   public async selectVariant(task: ProblemTaskLite, variant: string) {
-    await this.provider.getTurkContraksClient?.solveTask(this.innerProblem?.id, task.taskId, variant);
+    // @ts-ignore
+      await this.provider.getTurkContraksClient?.solveTask(this.innerProblem.id, task.taskId, variant);
 
     this.resultAnswers.push({
       taskId: task.taskId,
@@ -97,11 +99,8 @@ export class OpenedTaskComponent implements OnInit {
     const taskAnswers = this.resultAnswers.map((answer) => answer.answer)
     console.log("this.problem?.id: ", this.innerProblem?.id, " taskIds: ", taskIds, " taskAnswers: ", taskAnswers)
 
-    await this.provider.getTurkContraksClient?.withdraw(
-      this.innerProblem?.id,
-      [],
-      []
-    );
+    // @ts-ignore
+      await this.provider.getTurkContraksClient?.withdraw(this.innerProblem.id, [], []);
     // await this.provider.getTurkContraksClient?.withdrawAndForget()
 
     this.eventService.startTaskEvent.next(undefined);
