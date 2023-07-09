@@ -27,9 +27,9 @@ export class ZkTurkClient {
 
     // ethers.utils.parseEther("0.05")
     // convenience method to parse to eth.
-    // parseToEth(v) {
-    //   return this.web3.utils.fromWei(v);
-    // }
+    parseToEth(v: number) {
+      return ethers.utils.parseEther(String(v));
+    }
     //
     // parseToWei(v) {
     //   return this.web3.utils.toWei(v, "ether");
