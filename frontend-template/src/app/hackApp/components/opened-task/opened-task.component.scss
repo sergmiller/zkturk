@@ -1,4 +1,5 @@
-.opened-task-wrapper {}
+.opened-task-wrapper {
+}
 
 .back-link {
   cursor: pointer;
@@ -9,13 +10,11 @@
   margin-right: 6px;
 }
 
-
 .task-header,
 .task-footer {
   display: flex;
   justify-content: space-between;
 }
-
 
 label {
   font-weight: 600;
@@ -30,11 +29,9 @@ label {
   font-weight: 600;
 }
 
-
 .sub-task {
-
   // &:not(:last-child) {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
   // }
 
   img {
@@ -43,5 +40,4 @@ label {
     margin-bottom: 6px;
     border-radius: 6px;
   }
-
 }

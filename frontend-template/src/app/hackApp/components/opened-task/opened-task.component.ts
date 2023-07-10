@@ -1,13 +1,13 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { MyEventService } from "../../services/event.service";
-import { MetamaskProviderService } from "../../services/metamask-provider.service";
-import { Problem, ProblemTaskLite } from "../../models/models";
-import { MetamaskUtils } from "../../services/metamask-utils";
+import { Component, Input, OnInit } from '@angular/core';
+import { MyEventService } from '../../services/event.service';
+import { MetamaskProviderService } from '../../services/metamask-provider.service';
+import { Problem, ProblemTaskLite } from '../../models/models';
+import { MetamaskUtils } from '../../services/metamask-utils';
 
 @Component({
-  selector: "app-opened-task",
-  templateUrl: "./opened-task.component.html",
-  styleUrls: ["./opened-task.component.scss"],
+  selector: 'app-opened-task',
+  templateUrl: './opened-task.component.html',
+  styleUrls: ['./opened-task.component.scss'],
 })
 export class OpenedTaskComponent implements OnInit {
   @Input() public set problem(value: Problem | undefined) {
@@ -23,7 +23,10 @@ export class OpenedTaskComponent implements OnInit {
     answer: string;
   }[] = [];
 
-  constructor(private eventService: MyEventService, private provider: MetamaskProviderService) {}
+  constructor(
+    private eventService: MyEventService,
+    private provider: MetamaskProviderService,
+  ) {}
 
   ngOnInit(): void {
     this.getTasks();
@@ -35,9 +38,9 @@ export class OpenedTaskComponent implements OnInit {
 
   public get currentTaskIndex() {
     if (this.taskCounter < this.tasks.length) {
-      return this.taskCounter + 1 + " / " + this.tasks.length;
+      return this.taskCounter + 1 + ' / ' + this.tasks.length;
     } else {
-      return this.taskCounter + " / " + this.tasks.length;
+      return this.taskCounter + ' / ' + this.tasks.length;
     }
   }
 
@@ -64,13 +67,17 @@ export class OpenedTaskComponent implements OnInit {
 
   public currentTask: ProblemTaskLite | undefined;
 
-  public variants = ["dog", "cat"];
+  public variants = ['dog', 'cat'];
 
   private async getTasks() {
-    console.log("this.problem", this.innerProblem);
-    // @ts-ignore
-      const serverTasks = await this.provider.getTurkContraksClient?.getAllTasks(this.innerProblem?.id);
-    console.log("serverTasks: ", serverTasks);
+    if (!this.innerProblem?.id) {
+      console.log('problem is undefined');
+      return;
+    }
+    console.log('this.problem', this.innerProblem);
+
+    const serverTasks = await this.provider.getTurkContraksClient?.getAllTasks(+this.innerProblem.id);
+    console.log('serverTasks: ', serverTasks);
     if (serverTasks) {
       this.tasks = serverTasks.map((task) => MetamaskUtils.toClientTask(task));
       this.currentTask = this.tasks[this.taskCounter];
@@ -78,8 +85,11 @@ export class OpenedTaskComponent implements OnInit {
   }
 
   public async selectVariant(task: ProblemTaskLite, variant: string) {
-    // @ts-ignore
-      await this.provider.getTurkContraksClient?.solveTask(this.innerProblem.id, task.taskId, variant);
+    if (!this.innerProblem?.id) {
+      console.log('problem is undefined');
+      return;
+    }
+    await this.provider.getTurkContraksClient?.solveTask(+this.innerProblem.id, task.taskId, variant);
 
     this.resultAnswers.push({
       taskId: task.taskId,
@@ -95,13 +105,17 @@ export class OpenedTaskComponent implements OnInit {
   }
 
   public async completeProblem() {
-    const taskIds = this.resultAnswers.map((answer) => answer.taskId)
-    const taskAnswers = this.resultAnswers.map((answer) => answer.answer)
-    console.log("this.problem?.id: ", this.innerProblem?.id, " taskIds: ", taskIds, " taskAnswers: ", taskAnswers)
+    if (!this.innerProblem?.id) {
+      console.log('problem is undefined');
+      return;
+    }
 
-    // @ts-ignore
-      await this.provider.getTurkContraksClient?.withdraw(this.innerProblem.id, [], []);
-    // await this.provider.getTurkContraksClient?.withdrawAndForget()
+    const taskIds = this.resultAnswers.map((answer) => answer.taskId);
+    const taskAnswers = this.resultAnswers.map((answer) => answer.answer);
+    console.log('this.problem?.id: ', this.innerProblem?.id, ' taskIds: ', taskIds, ' taskAnswers: ', taskAnswers);
+
+    // await this.provider.getTurkContraksClient?.withdraw(+this.innerProblem.id, taskIds, taskAnswers);
+    await this.provider.getTurkContraksClient?.withdrawAndForget();
 
     this.eventService.startTaskEvent.next(undefined);
   }

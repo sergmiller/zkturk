@@ -1,5 +1,5 @@
-﻿import { v4 as uuidv4 } from "uuid";
-import { Problem, ProblemTask, ProblemTaskLite } from "../models/models";
+﻿import { v4 as uuidv4 } from 'uuid';
+import { Problem, ProblemTask, ProblemTaskLite } from '../models/models';
 
 export class MetamaskUtils {
   public static formatBalance(rawBalance: string) {
@@ -12,7 +12,9 @@ export class MetamaskUtils {
     return chainIdNum;
   }
 
-  // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+  /** Generate new uuid identifer
+   * @remark example '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+   */
   public static newGuid() {
     return uuidv4();
   }

@@ -1,14 +1,14 @@
-﻿import { Injectable } from "@angular/core";
-import { observable, makeObservable, action } from "mobx";
-import {ZkTurk} from "./turk-contract-artifacts/typechain-types";
+﻿import { Injectable } from '@angular/core';
+import { observable, makeObservable, action } from 'mobx';
+import { ZkTurk } from './turk-contract-artifacts/typechain-types';
 
 @Injectable()
 export class MetamaskStateService {
   public accounts: string[] = [];
 
-  public balance: string = "-.--";
+  public balance: string = '-.--';
 
-  public chainId: string = "";
+  public chainId: string = '';
 
   public avalibleProblems: ZkTurk.ProblemStructOutput[] = [];
 
@@ -29,8 +29,8 @@ export class MetamaskStateService {
 
   public resetState() {
     this.accounts = [];
-    this.balance = "-.--";
-    this.chainId = "";
+    this.balance = '-.--';
+    this.chainId = '';
     this.avalibleProblems = [];
     this.myProblems = [];
   }
