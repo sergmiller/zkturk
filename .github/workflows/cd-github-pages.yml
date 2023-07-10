@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: './frontend-template/dist/sakai-ng/.'
+          path: './frontend-template/dist/zk-turk-frontend/.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
