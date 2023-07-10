@@ -37,7 +37,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "zkturk.why-nft.com",
+              "baseHref": "/",
               "optimization": true,
               "sourceMap": false,
               "namedChunks": false,
