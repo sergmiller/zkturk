@@ -2,9 +2,11 @@ import {ZkTurk} from "../typechain-types";
 import {ethers} from "ethers";
 import {CryptoContractClient} from "./CryptoContractClient";
 import {stringToBytes32} from "./utils";
+import {TaskModel} from "./models";
 
 
 const DEFAULT_SEED = "defaultSeed";
+
 
 export class ZkTurkClient {
     private contractAddress: string;
@@ -140,22 +142,22 @@ export class ZkTurkClient {
     )
   }
 
-  // Get all tasks for the problem, those are not answered yet.
-    async getAllTasks(problemId: number) {
+    // Get all tasks for the problem, those are not answered yet.
+    async getAllTasks(problemId: number): Promise<TaskModel[]> {
         // TODO: make clever: e.g. batch of tasks.
         const problem = await this.getProblem(problemId)
         const taskUrls = problem.taskUrls
         // Filter them.
-        let res = []
+        let res = [] as TaskModel[]
         for (let i = 0; i < taskUrls.length; i++) {
             const notAnswered = await this.contract.isTaskNotAnsweredByWorker(problemId, i)
-            if (!notAnswered) {
-                continue
-            }
-            res.push({
-                id: i,
-                taskUrl: taskUrls[i],
-            })
+            res.push(
+                {
+                    id: i,
+                    taskUrl: taskUrls[i],
+                    alreadyAnswered: !notAnswered
+                }
+            )
         }
         return res
     }

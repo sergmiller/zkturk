@@ -19,4 +19,5 @@ export interface ProblemTask {
 export interface ProblemTaskLite {
   taskId: number;
   image: string;
+  answered: boolean;
 }

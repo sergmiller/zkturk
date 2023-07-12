@@ -1,5 +1,6 @@
 ﻿import { v4 as uuidv4 } from 'uuid';
 import { Problem, ProblemTask, ProblemTaskLite } from '../models/models';
+import {TaskModel} from "./turk-contract-artifacts/frontend-clients/models";
 
 export class MetamaskUtils {
   public static formatBalance(rawBalance: string) {
@@ -45,10 +46,11 @@ export class MetamaskUtils {
   //   };
   // }
 
-  public static toClientTask(serverTask: any): ProblemTaskLite {
+  public static toClientTask(serverTask: TaskModel): ProblemTaskLite {
     return {
       taskId: serverTask.id,
-      image: serverTask.url,
+      image: serverTask.taskUrl,
+      answered: serverTask.alreadyAnswered,
     };
   }
 
