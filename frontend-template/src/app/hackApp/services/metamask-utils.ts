@@ -48,7 +48,7 @@ export class MetamaskUtils {
   public static toClientTask(serverTask: any): ProblemTaskLite {
     return {
       taskId: serverTask.id,
-      image: serverTask.url,
+      image: serverTask.taskUrl,
     };
   }
 
