@@ -77,9 +77,9 @@ export class OpenedTaskComponent implements OnInit {
   }
 
   private _getCurrentTask () {
-    const idx = this._getCurrentTaskId()
-    if (idx) {
-      return this.tasks[idx]
+    const _id = this._getCurrentTaskId()
+    if (_id !== undefined) {
+      return this.tasks[_id]
     }
     return undefined
   }
@@ -105,9 +105,10 @@ export class OpenedTaskComponent implements OnInit {
       return;
     }
     await this.provider.getTurkContraksClient?.solveTask(+this.innerProblem.id, task.taskId, variant);
+
+    // After success solve - update info
     // Refresh tasks from chain.
     await this.getTasks()
-
     this.resultAnswers.push({
       taskId: task.taskId,
       answer: variant,
