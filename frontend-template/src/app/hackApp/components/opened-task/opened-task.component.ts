@@ -17,7 +17,6 @@ export class OpenedTaskComponent implements OnInit {
 
   public variants: string[] | undefined;
   public innerProblem: Problem | undefined;
-  public taskCounter: number = 0;
 
   @Input() public set problem(value: Problem | undefined) {
     this.innerProblem = value;
@@ -38,11 +37,11 @@ export class OpenedTaskComponent implements OnInit {
   // }
 
   public get currentTaskIndex() {
-    if (this.taskCounter < this.tasks.length) {
-      return this.taskCounter + 1 + ' / ' + this.tasks.length;
-    } else {
-      return this.taskCounter + ' / ' + this.tasks.length;
+    const currentTaskId = this._getCurrentTaskId();
+    if (currentTaskId !== undefined) {
+      return currentTaskId + 1 + ' / ' + this.tasks.length;
     }
+      return ''
   }
 
   closeTask() {
@@ -68,6 +67,23 @@ export class OpenedTaskComponent implements OnInit {
 
   public currentTask: ProblemTaskLite | undefined;
 
+  private _getCurrentTaskId () {
+    for (let i=0; i < this.tasks.length; i++) {
+      if (!this.tasks[i].answered) {
+        return i
+      }
+    }
+    return undefined
+  }
+
+  private _getCurrentTask () {
+    const idx = this._getCurrentTaskId()
+    if (idx) {
+      return this.tasks[idx]
+    }
+    return undefined
+  }
+
   private async getTasks() {
     if (!this.innerProblem?.id) {
       console.log('problem is undefined');
@@ -79,7 +95,7 @@ export class OpenedTaskComponent implements OnInit {
     console.log('serverTasks: ', serverTasks);
     if (serverTasks) {
       this.tasks = serverTasks.map((task) => MetamaskUtils.toClientTask(task));
-      this.currentTask = this.tasks[this.taskCounter];
+      this.currentTask = this._getCurrentTask();
     }
   }
 
@@ -89,18 +105,14 @@ export class OpenedTaskComponent implements OnInit {
       return;
     }
     await this.provider.getTurkContraksClient?.solveTask(+this.innerProblem.id, task.taskId, variant);
+    // Refresh tasks from chain.
+    await this.getTasks()
 
     this.resultAnswers.push({
       taskId: task.taskId,
       answer: variant,
     });
-    if (this.taskCounter < this.tasks.length) {
-      this.taskCounter++;
-      this.currentTask = this.tasks[this.taskCounter];
-    } else {
-      this.taskCounter = 0;
-      this.currentTask = undefined;
-    }
+    this.currentTask = this._getCurrentTask();
   }
 
   public async completeProblem() {
