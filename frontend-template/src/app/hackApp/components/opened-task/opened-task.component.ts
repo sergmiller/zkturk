@@ -17,7 +17,6 @@ export class OpenedTaskComponent implements OnInit {
 
   public variants: string[] | undefined;
   public innerProblem: Problem | undefined;
-  public taskCounter: number = 0;
 
   @Input() public set problem(value: Problem | undefined) {
     this.innerProblem = value;
