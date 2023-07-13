@@ -17,7 +17,7 @@ export class NewTaskLayoutComponent {
 
   public priceForOne: string = '';
 
-  public overlap: string = '';
+  public overlap: number = 0;
 
   public description: string = '';
 
