@@ -10,18 +10,19 @@ import { MetamaskUtils } from '../../services/metamask-utils';
   styleUrls: ['./opened-task.component.scss'],
 })
 export class OpenedTaskComponent implements OnInit {
-  @Input() public set problem(value: Problem | undefined) {
-    this.innerProblem = value;
-  }
-
-  public innerProblem: Problem | undefined;
-
-  public taskCounter: number = 0;
-
   private resultAnswers: {
     taskId: number;
     answer: string;
   }[] = [];
+
+  public variants: string[] | undefined;
+  public innerProblem: Problem | undefined;
+  public taskCounter: number = 0;
+
+  @Input() public set problem(value: Problem | undefined) {
+    this.innerProblem = value;
+    this.variants = this.innerProblem!.variants;
+  }
 
   constructor(
     private eventService: MyEventService,
@@ -66,8 +67,6 @@ export class OpenedTaskComponent implements OnInit {
   // ];
 
   public currentTask: ProblemTaskLite | undefined;
-
-  public variants = ['dog', 'cat'];
 
   private async getTasks() {
     if (!this.innerProblem?.id) {
