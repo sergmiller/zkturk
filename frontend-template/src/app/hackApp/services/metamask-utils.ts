@@ -1,10 +1,11 @@
 ﻿import { v4 as uuidv4 } from 'uuid';
-import { Problem, ProblemTask, ProblemTaskLite } from '../models/models';
+import { Problem, ProblemTaskLite } from '../models/models';
 import {TaskModel} from "./turk-contract-artifacts/frontend-clients/models";
+import {ZkTurk} from "./turk-contract-artifacts/typechain-types";
 
 export class MetamaskUtils {
-  public static formatBalance(rawBalance: string) {
-    const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(2);
+  public static formatBalance(rawBalance: string, fixedDigits: number = 2) {
+    const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(fixedDigits);
     return balance;
   }
 
@@ -20,14 +21,14 @@ export class MetamaskUtils {
     return uuidv4();
   }
 
-  public static toClientProblem(serverProblem: any): Problem {
+  public static toClientProblem(serverProblem: ZkTurk.ProblemStructOutput): Problem {
     return {
-      id: serverProblem.id,
+      id: serverProblem.id.toNumber(),
       title: serverProblem.title,
-      priceForOne: serverProblem.taskPriceWei,
-      overlap: serverProblem.workersMax,
+      priceForOne: Number(this.formatBalance(serverProblem.taskPriceWei.toString(), 16)),
+      overlap: serverProblem.workersMax.toNumber(),
       description: serverProblem.description,
-      images: serverProblem.urlToTask,
+      images: serverProblem.taskUrls,
       variants: serverProblem.asnwers,
     };
   }
