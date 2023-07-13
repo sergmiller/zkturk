@@ -77,8 +77,8 @@ export class NewTaskLayoutComponent {
     );
   }
 
-  private parseToEth(value: any) {
-    this.provider.getTurkContraksClient?.parseToEth(value);
+  private parseEthToWei(value: any) {
+    this.provider.getTurkContraksClient?.parseEthToWei(value);
   }
 
   // onSelect(event: any) {

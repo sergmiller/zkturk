@@ -1,8 +1,9 @@
 import {ZkTurk} from "../typechain-types";
-import {ethers} from "ethers";
+import {BigNumber, ethers} from "ethers";
 import {CryptoContractClient} from "./CryptoContractClient";
 import {stringToBytes32} from "./utils";
 import {TaskModel} from "./models";
+import {log} from "./logger";
 
 
 const DEFAULT_SEED = "defaultSeed";
@@ -16,8 +17,14 @@ export class ZkTurkClient {
     // private signer: SignerWithAddress;
     private signer: ethers.providers.JsonRpcSigner | any;
     private cryptoContractClient: CryptoContractClient;
+    private confirmations_number: number | undefined;
 
-    constructor(signer: ethers.providers.JsonRpcSigner, abi: any, address: string) {
+    constructor(
+        signer: ethers.providers.JsonRpcSigner,
+        abi: any,
+        address: string,
+        confirmations_number?: number,
+    ) {
         // To prevent cross contract interaction.
         this.contractAddress = address
         this.signer = signer
@@ -25,16 +32,20 @@ export class ZkTurkClient {
         // TODO: debug if really connected.
         this.contract = this.contract.connect(signer)
         this.cryptoContractClient = new CryptoContractClient(signer, abi , this.contract.address)
+        this.confirmations_number = confirmations_number
     }
 
     // convenience method to parse eth to wei.
-    parseToEth(v: number) {
+    parseEthToWei(v: number) {
         return ethers.utils.parseEther(String(v));
     }
-    //
-    // parseToWei(v) {
-    //   return this.web3.utils.toWei(v, "ether");
-    // }
+
+    // It parses to max 4 decimal places.
+    parseWeiToEth(v: number | string) {
+        const bigNumberV = BigNumber.from(v)
+        const remainder = bigNumberV.mod(1e14);
+        return ethers.utils.formatEther(bigNumberV.sub(remainder));
+    }
 
     async getProblem(problemId: number) {
         return await this.contract.getProblem(problemId);
@@ -79,11 +90,12 @@ export class ZkTurkClient {
   // TODO: signal not needed.
     async startProblem(
           problemId: number,
-          signal="", root = 123, nullifierHash = 456, proof = [1,2,3,4,5,6,7,8]) {
+          signal="", root = 123, nullifierHash = 456, proof = [1,2,3,4,5,6,7,8]
+    ) {
         const fee = await this._getStakeValue();
         const options = {value: fee}
         const signerAddress = await this.signer.getAddress()
-        return await this.contract.joinProblem(
+        const tx = await this.contract.joinProblem(
             problemId,
             signerAddress,
             root,
@@ -91,6 +103,8 @@ export class ZkTurkClient {
             proof,
             options,
         )
+        log(tx)
+        return tx
     }
 
     async getUserCreatedProblems() {
@@ -122,7 +136,7 @@ export class ZkTurkClient {
     async totalCostToCreateProblemEth(workersMax: number, taskPriceEth: number, answersMax: number) {
         const problemFee = await this._getProblemFee()
         const feeEth = Number(ethers.utils.formatEther((problemFee).toString()));
-        console.log('Contract problem fee:', feeEth)
+        log('Contract problem fee: ' + feeEth.toString())
         return feeEth + taskPriceEth * answersMax * workersMax;
     }
 
@@ -130,17 +144,19 @@ export class ZkTurkClient {
       title: string, description: string, urlToTasks: Array<string>, answers: Array<string>,
       workersMax: number, taskPriceEth: number, answersMax: number,
   ) {
-    const sumEth = await this.totalCostToCreateProblemEth(workersMax, taskPriceEth, answersMax);
+        const sumEth = await this.totalCostToCreateProblemEth(workersMax, taskPriceEth, answersMax);
 
-    const taskPriceWei = ethers.utils.parseEther(taskPriceEth.toString());
-    console.log("Sum eth to pay for problem creation:", sumEth)
-    const weiToSend = ethers.utils.parseEther(sumEth.toString());
-    console.log("Convert to wei to pay:", weiToSend)
-    const options = {value: weiToSend}
-    return await this.contract.addProblem(
+        const taskPriceWei = ethers.utils.parseEther(taskPriceEth.toString());
+        log("Sum eth to pay for problem creation:" + sumEth.toString())
+        const weiToSend = ethers.utils.parseEther(sumEth.toString());
+        log("Convert to wei to pay:" + weiToSend.toString())
+        const options = {value: weiToSend}
+        const tx = await this.contract.addProblem(
         title, description, urlToTasks, answers, workersMax, taskPriceWei, answersMax, options,
-    )
-  }
+        )
+        log(tx)
+        return tx
+    }
 
     // Get all tasks for the problem, those are not answered yet.
     async getAllTasks(problemId: number): Promise<TaskModel[]> {
@@ -173,12 +189,12 @@ export class ZkTurkClient {
         const seedBytes = stringToBytes32(seed)
         const cipheredAnswer = await this.cryptoContractClient.getSignedMessage(seedBytes, answer)
         const tx = await this.contract.solveTask(problemId, taskId, cipheredAnswer)
-        const res = await tx.wait()  // TODO: add default confirmation number.
+        const res = await tx.wait(this.confirmations_number)
         const events = res.events
         if (events) {
             // @ts-ignore
             const taskAnswerId = events[0].args[3]
-            console.log('Received taskAnswerId:', taskAnswerId)
+            log('Received taskAnswerId:' + taskAnswerId.toString())
             return taskAnswerId
         }
         throw Error('No task answer id received, no info if transaction submitte successfully.')
@@ -188,17 +204,23 @@ export class ZkTurkClient {
         // Convert seed.
         const seedBytes = stringToBytes32(seed)
         const signerAddress = await this.signer.getAddress()
-        await this.contract.withdrawAndDecipher(
+        const tx = this.contract.withdrawAndDecipher(
             signerAddress, problemId, taskAnswerIds, answers, seedBytes,
         )
+        log(tx)
+        return tx
     }
 
     async resetActiveProblem() {
-        await this.contract.resetActiveProblem()
+        const tx = await this.contract.resetActiveProblem()
+        log(tx)
+        return tx
     }
 
     // TODO: deprecated - use resetProblem
     async withdrawAndForget() {
-        return await this.resetActiveProblem()
+        const tx = await this.resetActiveProblem()
+        log(tx)
+        return tx
     }
 }

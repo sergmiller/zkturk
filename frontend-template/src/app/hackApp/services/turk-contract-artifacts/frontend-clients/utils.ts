@@ -1,5 +1,5 @@
-// Javascript to check if bytes32.
 import {ethers} from "ethers";
+
 
 function isBytes32(s: string) {
     try {
