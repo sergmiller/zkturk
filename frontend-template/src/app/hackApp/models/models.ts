@@ -1,8 +1,8 @@
 ﻿export interface Problem {
-  id?: string;
+  id?: number;
   title: string;
   priceForOne: number;
-  overlap: string;
+  overlap: number;
   description: string;
   images: string[];
   variants: string[];
